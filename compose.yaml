@@ -1,1 +1,24 @@
+version: '3.8'
 services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: spring-boot-app
+    ports:
+      - "8080:8080" # Map application port
+    volumes:
+      - .:/app      # Mount project directory as volume
+      - /app/build  # Cache build files
+    environment:
+      SPRING_PROFILES_ACTIVE: dev # Activate dev profile
+    stdin_open: true
+    tty: true
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: uz1kri9zyct4jwlon703
+      POSTGRES_PASSWORD: iDTieuTGmsLcHV8u6VZI
+      POSTGRES_DB: bmfrotaowgf9u3r9wcyr-postgresql.services.clever-cloud.com
+    ports:
+      - "5432:5432"
