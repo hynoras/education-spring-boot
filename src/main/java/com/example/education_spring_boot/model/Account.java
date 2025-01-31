@@ -2,12 +2,14 @@ package com.example.education_spring_boot.model;
 
 import jakarta.persistence.*;
 
+
 @Entity
-@Table(name = "Account")
+@Table(name = "account")
 public class Account {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private String id;
+    private long id;
+
 
     @Column(name = "username", unique = true, nullable = true, length = 20)
     private String username;
@@ -20,8 +22,8 @@ public class Account {
         this.password = password;
     }
 
-    public String getId() { return id; }
-    public void setId(String id) { this.id = id; }
+    public long getId() { return id; }
+    public void setId(long id) { this.id = id; }
 
     public String getUsername() { return username; }
     public void setUsername(String username) { this.username = username; }

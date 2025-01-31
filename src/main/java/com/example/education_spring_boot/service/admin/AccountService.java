@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AccountService {
     @Autowired
-    AccountRepo accountRepo;
+    private AccountRepo accountRepo;
 
     public Account register(Account account) {
         return accountRepo.save(account);
