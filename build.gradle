@@ -29,6 +29,10 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-testcontainers'
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	compileOnly 'org.projectlombok:lombok:1.18.36'
+	annotationProcessor 'org.projectlombok:lombok:1.18.36'
+	testCompileOnly 'org.projectlombok:lombok:1.18.36'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
 }
 
 tasks.named('test') {
