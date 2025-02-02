@@ -2,6 +2,8 @@ package com.example.education_spring_boot.model;
 
 import com.example.education_spring_boot.enumeration.RoleEnum;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
@@ -18,7 +20,6 @@ public class Account {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
 
-    @Size(max = 20, message = "account must not exceed 20 characters")
     @Column(name = "username", unique = true, nullable = false, length = 20)
     private String username;
 

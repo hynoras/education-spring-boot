@@ -19,9 +19,9 @@ public class AccountController {
     private AccountService accountService;
 
         @PostMapping("/register")
-        @PreAuthorize("hasAuthority('ADMIN')")
-        public ResponseEntity<Account> register(@Valid @RequestBody AccountDTO accountDTO) {
-            Account account = accountService.register(accountDTO);
-            return ResponseEntity.ok(account);
+//        @PreAuthorize("hasAuthority('ADMIN')")
+        public ResponseEntity<String> register(@Valid @RequestBody AccountDTO accountDTO) {
+            String response = accountService.register(accountDTO);
+            return ResponseEntity.ok(response);
         }
 }
