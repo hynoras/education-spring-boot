@@ -7,8 +7,8 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Builder
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -18,16 +18,19 @@ public class Account {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private long id;
 
-    @Size(max = 20, message = "account must have at least 20 characters")
+    @Size(max = 20, message = "account must not exceed 20 characters")
     @Column(name = "username", unique = true, nullable = false, length = 20)
-    final private String username;
+    private String username;
 
-    @Column(name = "password", unique = false, nullable = false)
-    final private String password;
+    @Column(name = "password", unique = false, nullable = false, length = 60)
+    private String password;
+
+    @Column(name = "email", unique = true, nullable = false)
+    private String email;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    final private RoleEnum role;  // STUDENT, ADMIN, FINANCE
+    private RoleEnum role;  // STUDENT, ADMIN, FINANCE
 
     @Column(name = "createdAt")
     private LocalDateTime createdAt = LocalDateTime.now();
