@@ -12,7 +12,7 @@ import lombok.*;
 public class RegisterRequest {
 
     @NotEmpty(message = "username must not empty")
-    @Size(max = 20, min = 4, message = "account length must be between 4 and 20 characters")
+    @Size(max = 20, min = 4, message = "username length must be between 4 and 20 characters")
     private String username;
 
     @NotEmpty(message = "password must not empty")

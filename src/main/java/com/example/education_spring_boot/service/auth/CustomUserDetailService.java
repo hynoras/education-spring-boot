@@ -1,5 +1,6 @@
 package com.example.education_spring_boot.service.auth;
 
+import com.example.education_spring_boot.dto.account.CustomUserDetails;
 import com.example.education_spring_boot.model.Account;
 import com.example.education_spring_boot.repository.admin.AccountRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,22 +34,6 @@ public class CustomUserDetailService implements UserDetailsService {
         if(account == null) {
             throw new UsernameNotFoundException("User Not Found");
         }
-        return new User(
-                account.getUsername(),
-                account.getPassword(),
-                true,
-                true,
-                true,
-                true,
-                getAuthorities(List.of(String.valueOf(account.getRole())))
-        );
-    }
-
-    private Collection<? extends GrantedAuthority> getAuthorities(List<String> roles) {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        for (String role: roles) {
-            authorities.add(new SimpleGrantedAuthority(role));
-        }
-        return authorities;
+        return new CustomUserDetails(account);
     }
 }
