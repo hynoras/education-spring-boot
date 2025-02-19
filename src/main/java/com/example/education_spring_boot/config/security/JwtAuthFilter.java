@@ -1,7 +1,9 @@
 package com.example.education_spring_boot.config.security;
 
 import com.example.education_spring_boot.service.auth.CustomUserDetailService;
+import com.example.education_spring_boot.util.CookieUtil;
 import com.example.education_spring_boot.util.JwtUtil;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -22,13 +24,16 @@ import java.util.Optional;
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
+    int EXPIRATION_TIME = 0;
     private final JwtUtil jwtUtil;
     private final CustomUserDetailService customUserDetailService;
+    private final CookieUtil cookieUtil;
 
     @Autowired
-    public  JwtAuthFilter(JwtUtil jwtUtil, CustomUserDetailService customUserDetailService) {
+    public  JwtAuthFilter(JwtUtil jwtUtil, CustomUserDetailService customUserDetailService, CookieUtil cookieUtil) {
         this.jwtUtil = jwtUtil;
         this.customUserDetailService = customUserDetailService;
+        this.cookieUtil = cookieUtil;
     }
 
     @Override
@@ -45,7 +50,25 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             if (jwtCookie.isPresent()) {
                 token = jwtCookie.get().getValue();
-                username = jwtUtil.extractUsername(token);
+                try {
+                    username = jwtUtil.extractUsername(token);
+
+                    if (jwtUtil.isTokenExpired(token)) {
+                        System.out.println("Token expired for user: " + username + ". Clearing cookie.");
+                        Cookie expiredCookie = cookieUtil.generateCookie("Authorization", null, EXPIRATION_TIME);
+
+                        response.addCookie(expiredCookie);
+                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT Token expired");
+                        return;
+                    }
+                } catch (ExpiredJwtException e) {
+                    System.out.println("ExpiredJwtException caught: Clearing cookie.");
+                    Cookie expiredCookie = cookieUtil.generateCookie("Authorization", null, EXPIRATION_TIME);
+
+                    response.addCookie(expiredCookie);
+                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT Token expired");
+                    return;
+                }
             }
         }
 

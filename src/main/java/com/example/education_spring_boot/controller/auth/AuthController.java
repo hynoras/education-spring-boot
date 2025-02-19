@@ -4,6 +4,7 @@ import com.example.education_spring_boot.dto.account.CustomUserDetails;
 import com.example.education_spring_boot.dto.account.LoginRequest;
 import com.example.education_spring_boot.dto.account.RegisterRequest;
 import com.example.education_spring_boot.service.auth.AccountServiceImpl;
+import com.example.education_spring_boot.util.CookieUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -21,10 +22,12 @@ import java.util.Map;
 @RequestMapping("api/auth")
 public class AuthController {
     private final AccountServiceImpl accountService;
+    private final CookieUtil cookieUtil;
 
     @Autowired
-    public AuthController(AccountServiceImpl accountService) {
+    public AuthController(AccountServiceImpl accountService, CookieUtil cookieUtil) {
         this.accountService = accountService;
+        this.cookieUtil = cookieUtil;
     }
 
     @PostMapping("/register")
@@ -38,11 +41,7 @@ public class AuthController {
     public ResponseEntity<String> authenticate(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         int EXPIRATION_TIME = 60 * 60 * 24;
         String token = accountService.login(loginRequest);
-        Cookie cookie = new Cookie("Authorization", token);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(EXPIRATION_TIME);
+        Cookie cookie = cookieUtil.generateCookie("Authorization", token, EXPIRATION_TIME);
         response.addCookie(cookie);
 
         return ResponseEntity.ok().build();
