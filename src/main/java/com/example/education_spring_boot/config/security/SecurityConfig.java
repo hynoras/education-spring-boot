@@ -36,7 +36,7 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register").hasAuthority("ADMIN")
-                        .requestMatchers("/api/auth/login").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/auth/get-user").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess
