@@ -54,7 +54,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     username = jwtUtil.extractUsername(token);
 
                     if (jwtUtil.isTokenExpired(token)) {
-                        System.out.println("Token expired for user: " + username + ". Clearing cookie.");
                         Cookie expiredCookie = cookieUtil.generateCookie("Authorization", null, EXPIRATION_TIME);
 
                         response.addCookie(expiredCookie);
@@ -62,7 +61,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                         return;
                     }
                 } catch (ExpiredJwtException e) {
-                    System.out.println("ExpiredJwtException caught: Clearing cookie.");
                     Cookie expiredCookie = cookieUtil.generateCookie("Authorization", null, EXPIRATION_TIME);
 
                     response.addCookie(expiredCookie);

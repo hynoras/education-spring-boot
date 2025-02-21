@@ -1,0 +1,32 @@
+package com.example.education_spring_boot.controller.admin.student;
+
+import com.example.education_spring_boot.model.Student;
+import com.example.education_spring_boot.service.admin.student.StudentServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("api/admin")
+public class StudentController {
+
+    private final StudentServiceImpl studentService;
+
+    @Autowired
+    public StudentController(StudentServiceImpl studentService) {
+        this.studentService = studentService;
+    }
+
+    @GetMapping("/students")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<List<Student>> getAllStudent() {
+        List<Student> response = studentService.getAllStudent();
+        return ResponseEntity.ok(response);
+    }
+
+}
