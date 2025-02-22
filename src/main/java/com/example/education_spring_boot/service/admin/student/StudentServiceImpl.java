@@ -1,5 +1,6 @@
 package com.example.education_spring_boot.service.admin.student;
 
+import com.example.education_spring_boot.dto.student.StudentList;
 import com.example.education_spring_boot.model.Student;
 import com.example.education_spring_boot.repository.StudentRepo;
 import com.example.education_spring_boot.service.interfaces.StudentService;
@@ -19,8 +20,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<Student> getAllStudent() {
-        return studentRepo.findAll();
+    public List<StudentList> getAllStudent() {
+        try {
+            return studentRepo.findAllStudent();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to fetch student list",e);
+        }
     }
 
     @Override

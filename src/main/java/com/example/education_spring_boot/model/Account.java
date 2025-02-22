@@ -1,10 +1,7 @@
 package com.example.education_spring_boot.model;
 
-import com.example.education_spring_boot.enumeration.RoleEnum;
+import com.example.education_spring_boot.enums.RoleEnum;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;

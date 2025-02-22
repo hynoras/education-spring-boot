@@ -1,5 +1,6 @@
 package com.example.education_spring_boot.controller.admin.student;
 
+import com.example.education_spring_boot.dto.student.StudentList;
 import com.example.education_spring_boot.model.Student;
 import com.example.education_spring_boot.service.admin.student.StudentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,8 @@ public class StudentController {
 
     @GetMapping("/students")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<List<Student>> getAllStudent() {
-        List<Student> response = studentService.getAllStudent();
+    public ResponseEntity<List<StudentList>> getAllStudent() {
+        List<StudentList> response = studentService.getAllStudent();
         return ResponseEntity.ok(response);
     }
 
