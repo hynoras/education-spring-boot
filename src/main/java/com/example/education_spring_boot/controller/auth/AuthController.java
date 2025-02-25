@@ -40,20 +40,20 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> authenticate(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+    public ResponseEntity<?> authenticate(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
         int EXPIRATION_TIME = 60 * 60 * 24;
         String token = accountService.login(loginRequest);
         Cookie cookie = cookieUtil.generateCookie("Authorization", token, EXPIRATION_TIME);
         response.addCookie(cookie);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(Map.of("message", "Login successful"));
     }
 
     @GetMapping("/get-user")
     public ResponseEntity<?> getUserDetails() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null || !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
         }
 

@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 public class StudentList {
     private Long identity;
-    private String fullName;
-    private String majorName;
-    private String departmentName;
+    private String full_name;
+    private String major_name;
+    private String department_name;
 }

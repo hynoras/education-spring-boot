@@ -29,5 +29,5 @@ public class StudentController {
         List<StudentList> response = studentService.getAllStudent();
         return ResponseEntity.ok(response);
     }
-
+ q
 }

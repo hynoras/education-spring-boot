@@ -4,6 +4,8 @@ import com.example.education_spring_boot.service.auth.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -29,14 +31,30 @@ public class SecurityConfig {
         this.customUserDetailService = customUserDetailService;
     }
 
+//    @Bean
+//    @Order(Ordered.HIGHEST_PRECEDENCE)
+//    public SecurityFilterChain authSecurityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .csrf(csrf -> csrf.disable())
+//                .cors(cors -> cors.configure(http))
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/api/auth/login", "/api/auth/get-user").permitAll()
+//                        .anyRequest().denyAll()
+//                )
+//                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//
+//        return http.build();
+//    }
+
     @Bean
+//    @Order(Ordered.LOWEST_PRECEDENCE)
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/register").hasAuthority("ADMIN")
                         .requestMatchers("/api/auth/login", "/api/auth/get-user").permitAll()
+                        .requestMatchers("/api/auth/register").hasAuthority("ADMIN")
                         .requestMatchers("/api/admin/**").hasAuthority("ADMIN")
                         .anyRequest().authenticated()
                 )
