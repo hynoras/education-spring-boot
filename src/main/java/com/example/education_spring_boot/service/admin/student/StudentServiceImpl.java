@@ -5,6 +5,10 @@ import com.example.education_spring_boot.model.Student;
 import com.example.education_spring_boot.repository.StudentRepo;
 import com.example.education_spring_boot.service.interfaces.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,9 +24,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<StudentList> getAllStudent() {
+    public List<StudentList> getAllStudent(Integer pageNo, Integer pageSize, String sortBy) {
         try {
-            return studentRepo.findAllStudent();
+            Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+            Page<StudentList> pagedResult = studentRepo.findAllStudent(paging);
+            return pagedResult.getContent();
         } catch (Exception e) {
             throw new RuntimeException("Failed to fetch student list",e);
         }

@@ -6,6 +6,6 @@ import com.example.education_spring_boot.model.Student;
 import java.util.List;
 
 public interface StudentService {
-    public List<StudentList> getAllStudent();
+    public List<StudentList> getAllStudent(Integer pageNo, Integer pageSize,  String sortBy);
     public Student getStudentDetail();
 }
