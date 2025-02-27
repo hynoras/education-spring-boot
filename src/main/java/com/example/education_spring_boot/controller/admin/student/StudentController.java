@@ -1,5 +1,6 @@
 package com.example.education_spring_boot.controller.admin.student;
 
+import com.example.education_spring_boot.dto.student.PaginatedList;
 import com.example.education_spring_boot.dto.student.StudentList;
 import com.example.education_spring_boot.model.Student;
 import com.example.education_spring_boot.service.admin.student.StudentServiceImpl;
@@ -26,11 +27,11 @@ public class StudentController {
 
     @GetMapping("/students")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<List<StudentList>> getAllStudent(
+    public ResponseEntity<PaginatedList<StudentList>> getAllStudent(
         @RequestParam(defaultValue = "0") Integer pageNo,
         @RequestParam(defaultValue = "10") Integer pageSize,
         @RequestParam(defaultValue = "identity") String sortBy) {
-        List<StudentList> response = studentService.getAllStudent(pageNo, pageSize, sortBy);
+        PaginatedList<StudentList> response = studentService.getAllStudent(pageNo, pageSize, sortBy);
         return ResponseEntity.ok(response);
     }
 }

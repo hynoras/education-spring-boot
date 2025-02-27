@@ -1,5 +1,6 @@
 package com.example.education_spring_boot.service.admin.student;
 
+import com.example.education_spring_boot.dto.student.PaginatedList;
 import com.example.education_spring_boot.dto.student.StudentList;
 import com.example.education_spring_boot.model.Student;
 import com.example.education_spring_boot.repository.StudentRepo;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -24,11 +26,16 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public List<StudentList> getAllStudent(Integer pageNo, Integer pageSize, String sortBy) {
+    public PaginatedList<StudentList> getAllStudent(Integer pageNo, Integer pageSize, String sortBy) {
         try {
             Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
             Page<StudentList> pagedResult = studentRepo.findAllStudent(paging);
-            return pagedResult.getContent();
+            return new PaginatedList<>(
+                pagedResult.getContent(),
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
+                pagedResult.isLast()
+            );
         } catch (Exception e) {
             throw new RuntimeException("Failed to fetch student list",e);
         }
