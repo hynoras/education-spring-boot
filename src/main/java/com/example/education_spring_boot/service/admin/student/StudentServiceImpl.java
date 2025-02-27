@@ -26,9 +26,9 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public PaginatedList<StudentList> getAllStudent(Integer pageNo, Integer pageSize, String sortBy) {
+    public PaginatedList<StudentList> getAllStudent(Integer currentPage, Integer pageSize, String sortBy) {
         try {
-            Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+            Pageable paging = PageRequest.of(currentPage, pageSize, Sort.by(sortBy));
             Page<StudentList> pagedResult = studentRepo.findAllStudent(paging);
             return new PaginatedList<>(
                 pagedResult.getContent(),
