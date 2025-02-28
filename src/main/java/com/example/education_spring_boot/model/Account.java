@@ -28,8 +28,8 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private RoleEnum role;  // STUDENT, ADMIN, FINANCE
+    private RoleEnum role;
 
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 }

@@ -1,35 +1,25 @@
 package com.example.education_spring_boot.controller.auth;
 
-import com.example.education_spring_boot.dto.account.CustomUserDetails;
 import com.example.education_spring_boot.dto.account.LoginRequest;
 import com.example.education_spring_boot.dto.account.RegisterRequest;
 import com.example.education_spring_boot.service.auth.AccountServiceImpl;
 import com.example.education_spring_boot.util.CookieUtil;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("api/auth")
 public class AuthController {
     private final AccountServiceImpl accountService;
-    private final CookieUtil cookieUtil;
 
     @Autowired
-    public AuthController(AccountServiceImpl accountService, CookieUtil cookieUtil) {
+    public AuthController(AccountServiceImpl accountService) {
         this.accountService = accountService;
-        this.cookieUtil = cookieUtil;
     }
 
     @PostMapping("/register")
@@ -40,33 +30,15 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
-        int EXPIRATION_TIME = 60 * 60 * 24;
-        String token = accountService.login(loginRequest);
-        Cookie cookie = cookieUtil.generateCookie("Authorization", token, EXPIRATION_TIME);
-        response.addCookie(cookie);
-
-        return ResponseEntity.ok(Map.of("message", "Login successful"));
+    public ResponseEntity<Map<String,String>> authenticate(@Valid @RequestBody LoginRequest loginRequest) {
+        Map<String, String> response = accountService.login(loginRequest);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/get-user")
     public ResponseEntity<?> getUserDetails() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated");
-        }
-
-        Optional<String> roleOptional = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .findFirst();
-
-        String role = roleOptional.orElse("USER");
-
-        return ResponseEntity.ok(Map.of(
-                "username", authentication.getName(),
-                "role", role
-        ));
+        Map<String,String> response = accountService.getAccountDetail();
+        return ResponseEntity.ok(response);
     }
 
 }
