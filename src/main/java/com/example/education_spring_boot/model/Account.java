@@ -1,10 +1,7 @@
 package com.example.education_spring_boot.model;
 
-import com.example.education_spring_boot.enumeration.RoleEnum;
+import com.example.education_spring_boot.enums.RoleEnum;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -31,8 +28,8 @@ public class Account {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private RoleEnum role;  // STUDENT, ADMIN, FINANCE
+    private RoleEnum role;
 
-    @Column(name = "createdAt")
+    @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 }

@@ -1,6 +1,6 @@
 package com.example.education_spring_boot.dto.account;
 
-import com.example.education_spring_boot.enumeration.RoleEnum;
+import com.example.education_spring_boot.enums.RoleEnum;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
