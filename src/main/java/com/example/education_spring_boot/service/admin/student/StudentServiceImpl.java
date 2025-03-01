@@ -12,8 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -26,18 +26,31 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public PaginatedList<StudentList> getAllStudent(Integer currentPage, Integer pageSize, String sortBy) {
+    public PaginatedList<StudentList> getAllStudent(
+        Integer currentPage,
+        Integer pageSize,
+        String sortBy,
+        String sortOrder,
+        String search
+    ) {
         try {
-            Pageable paging = PageRequest.of(currentPage, pageSize, Sort.by(sortBy));
-            Page<StudentList> pagedResult = studentRepo.findAllStudent(paging);
+            Sort.Direction direction = sortOrder.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+            Pageable paging = PageRequest.of(currentPage, pageSize, Sort.by(direction, sortBy));
+            Page<StudentList> pagedResult;
+            if(search == null  || search.trim().isEmpty()) {
+                pagedResult = studentRepo.findAllStudent(paging);
+            }
+            else {
+                pagedResult = studentRepo.searchStudents(search.trim(), paging);
+            }
             return new PaginatedList<>(
-                pagedResult.getContent(),
-                pagedResult.getTotalElements(),
-                pagedResult.getTotalPages(),
-                pagedResult.isLast()
+                    pagedResult.getContent(),
+                    pagedResult.getTotalElements(),
+                    pagedResult.getTotalPages(),
+                    pagedResult.isLast()
             );
         } catch (Exception e) {
-            throw new RuntimeException("Failed to fetch student list",e);
+            throw new RuntimeException("Failed to fetch student list", e);
         }
     }
 

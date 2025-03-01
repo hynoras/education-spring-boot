@@ -2,7 +2,6 @@ package com.example.education_spring_boot.controller.admin.student;
 
 import com.example.education_spring_boot.dto.student.PaginatedList;
 import com.example.education_spring_boot.dto.student.StudentList;
-import com.example.education_spring_boot.model.Student;
 import com.example.education_spring_boot.service.admin.student.StudentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,8 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("api/admin")
@@ -30,8 +27,11 @@ public class StudentController {
     public ResponseEntity<PaginatedList<StudentList>> getAllStudent(
         @RequestParam(defaultValue = "0") Integer currentPage,
         @RequestParam(defaultValue = "10") Integer pageSize,
-        @RequestParam(defaultValue = "identity") String sortBy) {
-        PaginatedList<StudentList> response = studentService.getAllStudent(currentPage, pageSize, sortBy);
+        @RequestParam(defaultValue = "identity") String sortBy,
+        @RequestParam(defaultValue = "desc") String sortOrder,
+        @RequestParam(defaultValue = "") String search
+    ) {
+        PaginatedList<StudentList> response = studentService.getAllStudent(currentPage, pageSize, sortBy, sortOrder, search);
         return ResponseEntity.ok(response);
     }
 }

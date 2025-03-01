@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,4 +18,11 @@ public interface StudentRepo extends JpaRepository<Student, Long> {
             "JOIN s.major m " +
             "JOIN m.department d")
     Page<StudentList> findAllStudent(Pageable pageable);
+
+    @Query("SELECT new com.example.education_spring_boot.dto.student.StudentList(s.identity, s.fullName, s.birthDate, s.gender, m.majorName, d.departmentName) " +
+            "FROM Student s " +
+            "JOIN s.major m " +
+            "JOIN m.department d " +
+            "WHERE CONCAT(s.identity, ' ', s.fullName) LIKE CONCAT('%', :search, '%')")
+    Page<StudentList> searchStudents(@Param("search") String search, Pageable pageable);
 }
