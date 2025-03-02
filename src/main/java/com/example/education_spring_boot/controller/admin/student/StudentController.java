@@ -24,14 +24,16 @@ public class StudentController {
 
     @GetMapping("/students")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<PaginatedList<StudentList>> getAllStudent(
+    public<T> ResponseEntity<PaginatedList<StudentList>> getAllStudent(
         @RequestParam(defaultValue = "0") Integer currentPage,
         @RequestParam(defaultValue = "10") Integer pageSize,
         @RequestParam(defaultValue = "identity") String sortBy,
         @RequestParam(defaultValue = "desc") String sortOrder,
+        @RequestParam(defaultValue = "") String filterBy,
+        @RequestParam(defaultValue = "") T filterValue,
         @RequestParam(defaultValue = "") String search
     ) {
-        PaginatedList<StudentList> response = studentService.getAllStudent(currentPage, pageSize, sortBy, sortOrder, search);
+        PaginatedList<StudentList> response = studentService.getAllStudent(currentPage, pageSize, sortBy, sortOrder, filterBy, filterValue, search);
         return ResponseEntity.ok(response);
     }
 }

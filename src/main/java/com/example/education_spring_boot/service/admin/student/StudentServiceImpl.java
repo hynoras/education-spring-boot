@@ -12,9 +12,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
-import java.util.List;
-
 @Service
 public class StudentServiceImpl implements StudentService {
 
@@ -31,6 +28,8 @@ public class StudentServiceImpl implements StudentService {
         Integer pageSize,
         String sortBy,
         String sortOrder,
+        String filterBy,
+        T filterValue,
         String search
     ) {
         try {
@@ -42,6 +41,9 @@ public class StudentServiceImpl implements StudentService {
             }
             else {
                 pagedResult = studentRepo.searchStudents(search.trim(), paging);
+            }
+            if (filterBy != null) {
+                pagedResult = studentRepo.findByFilter(filterBy, filterValue, paging);
             }
             return new PaginatedList<>(
                     pagedResult.getContent(),
