@@ -16,11 +16,11 @@ public class StudentSpecification {
     public Specification<Student> filterByMajor(List<String> majors) {
         return (root, query, builder) -> majors == null || majors.isEmpty()
             ? builder.conjunction()
-            : root.get("major").in(majors);
+            : root.join("major").get("majorName").in(majors);
     }
     public Specification<Student> filterByDepartment(List<String> departments) {
         return (root, query, builder) -> departments == null || departments.isEmpty()
             ? builder.conjunction()
-            : root.get("department").in(departments);
+            : root.join("major").join("department").get("departmentName").in(departments);
         }
 }

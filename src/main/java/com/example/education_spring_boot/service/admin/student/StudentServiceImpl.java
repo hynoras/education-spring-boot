@@ -18,7 +18,6 @@ import java.util.List;
 
 @Service
 public class StudentServiceImpl implements StudentService {
-
     private final StudentRepo studentRepo;
     private final StudentSpecification studentSpecification;
 
