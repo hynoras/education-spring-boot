@@ -14,6 +14,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class StudentServiceImpl implements StudentService {
 
@@ -32,25 +34,23 @@ public class StudentServiceImpl implements StudentService {
         Integer pageSize,
         String sortBy,
         String sortOrder,
-        String filterBy,
-        String filterValue,
+        List<String> gender,
+        List<String> major,
+        List<String> department,
         String search
     ) {
         try {
             Sort.Direction direction = sortOrder.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
             Pageable paging = PageRequest.of(currentPage, pageSize, Sort.by(direction, sortBy));
-            Specification<Student> studentSpec = studentSpecification.filterStudent(filterBy, filterValue);
-            Page<Student> pagedResult;
+            Specification<Student> filters = Specification.where(studentSpecification.filterByGender(gender))
+                .and(studentSpecification.filterByMajor(major))
+                .and(studentSpecification.filterByDepartment(department));
             if(search != null  && !search.trim().isEmpty()) {
-                pagedResult = studentRepo.findAll(
-                    Specification.where(studentSpec).and((root, query, builder) ->
-                        builder.like(builder.concat(root.get("identity"), root.get("fullName")), "%" + search + "%")),
-                    paging
-                );
+                filters = filters.and((root, query, builder) ->
+                    builder.like(builder.concat(root.get("identity"), root.get("fullName")), "%" + search + "%"
+                ));
             }
-            else {
-                pagedResult = studentRepo.findAll(studentSpec, paging);
-            }
+            Page<Student> pagedResult = studentRepo.findAll(filters, paging);
             return new PaginatedList<>(
                 pagedResult.getContent().stream().map(student -> new StudentList(
                     student.getIdentity(),
@@ -60,7 +60,7 @@ public class StudentServiceImpl implements StudentService {
                     student.getMajor().getMajorName(),
                     student.getMajor().getDepartment().getDepartmentName()
                 )).toList(),
-                pagedResult.getNumberOfElements(),
+                pagedResult.getTotalElements(),
                 pagedResult.getTotalPages(),
                 pagedResult.isLast()
             );

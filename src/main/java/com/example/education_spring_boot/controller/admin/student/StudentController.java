@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/admin")
 public class StudentController {
@@ -29,11 +31,21 @@ public class StudentController {
         @RequestParam(defaultValue = "10") Integer pageSize,
         @RequestParam(defaultValue = "identity") String sortBy,
         @RequestParam(defaultValue = "desc") String sortOrder,
-        @RequestParam(defaultValue = "", required = false) String filterBy,
-        @RequestParam(defaultValue = "", required = false) String filterValue,
+        @RequestParam(defaultValue = "", required = false) List<String> gender,
+        @RequestParam(defaultValue = "", required = false) List<String> major,
+        @RequestParam(defaultValue = "", required = false) List<String> department,
         @RequestParam(defaultValue = "") String search
     ) {
-        PaginatedList<StudentList> response = studentService.getAllStudent(currentPage, pageSize, sortBy, sortOrder, filterBy, filterValue, search);
+        PaginatedList<StudentList> response = studentService.getAllStudent(
+            currentPage,
+            pageSize,
+            sortBy,
+            sortOrder,
+            gender,
+            major,
+            department,
+            search
+        );
         return ResponseEntity.ok(response);
     }
 }

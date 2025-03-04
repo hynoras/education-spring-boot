@@ -12,8 +12,9 @@ public interface StudentService {
         Integer pageSize,
         String sortBy,
         String sortOrder,
-        String filterBy,
-        String filterValue,
+        List<String> gender,
+        List<String> major,
+        List<String> department,
         String search
     );
     public Student getStudentDetail();
