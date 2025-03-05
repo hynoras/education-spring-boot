@@ -14,10 +14,11 @@ public class Major {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer majorId;
 
+    @Column(unique = true)
     private String majorName;
 
     @ManyToOne
-    @JoinColumn(name = "department_id")
+    @JoinColumn(name = "department_id", referencedColumnName = "departmentid")
     private Department department;
 }
 

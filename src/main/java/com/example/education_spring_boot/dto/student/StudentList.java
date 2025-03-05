@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudentList {
-    private Long identity;
+    private String identity;
     private String full_name;
     private LocalDate birth_date;
     private GenderEnum gender;

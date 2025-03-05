@@ -1,6 +1,9 @@
 package com.example.education_spring_boot.specs;
 
+import com.example.education_spring_boot.model.Major;
 import com.example.education_spring_boot.model.Student;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
@@ -14,13 +17,17 @@ public class StudentSpecification {
             : root.get("gender").in(genders);
     }
     public Specification<Student> filterByMajor(List<String> majors) {
-        return (root, query, builder) -> majors == null || majors.isEmpty()
-            ? builder.conjunction()
-            : root.join("major").get("majorName").in(majors);
+        return (root, query, builder) -> {
+            if (majors == null || majors.isEmpty()) return builder.conjunction();
+            Join<Student, Major> majorJoin = root.join("major", JoinType.LEFT);
+            return majorJoin.get("majorName").in(majors);
+        };
     }
     public Specification<Student> filterByDepartment(List<String> departments) {
-        return (root, query, builder) -> departments == null || departments.isEmpty()
-            ? builder.conjunction()
-            : root.join("major").join("department").get("departmentName").in(departments);
-        }
+        return (root, query, builder) -> {
+            if (departments == null || departments.isEmpty()) return builder.conjunction();
+            Join<Student, Major> majorJoin = root.join("major", JoinType.LEFT).join("department", JoinType.LEFT);
+            return majorJoin.get("departmentName").in(departments);
+        };
+    }
 }

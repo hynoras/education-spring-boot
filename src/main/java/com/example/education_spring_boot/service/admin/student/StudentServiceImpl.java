@@ -44,12 +44,16 @@ public class StudentServiceImpl implements StudentService {
             Specification<Student> filters = Specification.where(studentSpecification.filterByGender(gender))
                 .and(studentSpecification.filterByMajor(major))
                 .and(studentSpecification.filterByDepartment(department));
-            if(search != null  && !search.trim().isEmpty()) {
+            Page<Student> pagedResult;
+            if(search != null) {
                 filters = filters.and((root, query, builder) ->
-                    builder.like(builder.concat(root.get("identity"), root.get("fullName")), "%" + search + "%"
-                ));
+                    builder.or(
+                        builder.like(root.get("identity"), "%" + search + "%"),
+                        builder.like(root.get("fullName"), "%" + search + "%")
+                    )
+                );
             }
-            Page<Student> pagedResult = studentRepo.findAll(filters, paging);
+            pagedResult = studentRepo.findAll(filters, paging);
             return new PaginatedList<>(
                 pagedResult.getContent().stream().map(student -> new StudentList(
                     student.getIdentity(),
