@@ -1,2 +1,18 @@
-.gradle/
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# Target & Build
+target/
 build/
+
+# Logs
+*.log
+/logs/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Dependency
+.gradle/
