@@ -3,7 +3,6 @@ package com.example.education_spring_boot.model;
 import com.example.education_spring_boot.enums.RoleEnum;
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDateTime;
 
 @AllArgsConstructor
@@ -13,14 +12,16 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "account")
 public class Account {
+    private static final int USERNAME_LENGTH = 20;
+    private static final int PASSWORD_LENGTH = 60;
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "username", unique = true, nullable = false, length = 20)
+    @Column(name = "username", unique = true, nullable = false, length = USERNAME_LENGTH)
     private String username;
 
-    @Column(name = "password", unique = false, nullable = false, length = 60)
+    @Column(name = "password", unique = false, nullable = false, length = PASSWORD_LENGTH)
     private String password;
 
     @Column(name = "email", unique = true, nullable = false)

@@ -23,7 +23,7 @@ public class Student {
     private Account account;
 
     @Column(unique = true)
-    private Long identity;
+    private String identity;
 
     private String fullName;
     private LocalDate birthDate;

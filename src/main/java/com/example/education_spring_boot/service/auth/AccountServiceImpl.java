@@ -7,15 +7,12 @@ import com.example.education_spring_boot.repository.AccountRepo;
 import com.example.education_spring_boot.service.interfaces.AccountService;
 import com.example.education_spring_boot.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -56,7 +53,7 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
-    public Map<String,String> login(LoginRequest loginRequest) {
+    public Map<String, String> login(LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
@@ -71,7 +68,7 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Map<String,String> getAccountDetail() {
+    public Map<String, String> getAccountDetail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         try {
             Optional<String> roleOptional = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst();
