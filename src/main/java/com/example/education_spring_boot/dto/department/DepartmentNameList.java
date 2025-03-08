@@ -1,4 +1,4 @@
-package com.example.education_spring_boot.dto.student.department;
+package com.example.education_spring_boot.dto.department;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

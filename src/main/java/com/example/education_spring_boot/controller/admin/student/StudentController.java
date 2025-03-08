@@ -1,15 +1,15 @@
 package com.example.education_spring_boot.controller.admin.student;
 
-import com.example.education_spring_boot.dto.student.PaginatedList;
-import com.example.education_spring_boot.dto.student.StudentList;
+import com.example.education_spring_boot.dto.PaginatedList;
+import com.example.education_spring_boot.dto.student.detail.PersonalInformation;
+import com.example.education_spring_boot.dto.student.detail.StudentDetail;
+import com.example.education_spring_boot.dto.student.list.StudentList;
+import com.example.education_spring_boot.model.Student;
 import com.example.education_spring_boot.service.admin.student.StudentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -48,4 +48,12 @@ public class StudentController {
         );
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/students/{identity}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<PersonalInformation> getStudentDetail(@PathVariable("identity") String identity) {
+        PersonalInformation response = studentService.getStudentDetail(identity);
+        return ResponseEntity.ok(response);
+    }
+
 }

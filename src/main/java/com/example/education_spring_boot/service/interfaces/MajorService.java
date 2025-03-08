@@ -1,6 +1,6 @@
 package com.example.education_spring_boot.service.interfaces;
 
-import com.example.education_spring_boot.dto.student.major.MajorNameList;
+import com.example.education_spring_boot.dto.major.MajorNameList;
 
 import java.util.List;
 

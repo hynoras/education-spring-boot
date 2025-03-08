@@ -1,7 +1,9 @@
 package com.example.education_spring_boot.service.admin.student;
 
-import com.example.education_spring_boot.dto.student.PaginatedList;
-import com.example.education_spring_boot.dto.student.StudentList;
+import com.example.education_spring_boot.dto.PaginatedList;
+import com.example.education_spring_boot.dto.student.detail.PersonalInformation;
+import com.example.education_spring_boot.dto.student.detail.StudentDetail;
+import com.example.education_spring_boot.dto.student.list.StudentList;
 import com.example.education_spring_boot.model.Student;
 import com.example.education_spring_boot.repository.StudentRepo;
 import com.example.education_spring_boot.service.interfaces.StudentService;
@@ -73,7 +75,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student getStudentDetail() {
-        return null;
+    public PersonalInformation getStudentDetail(String identity) {
+        return studentRepo.findAllByIdentity(identity);
     }
 }

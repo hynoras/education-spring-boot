@@ -1,7 +1,9 @@
 package com.example.education_spring_boot.service.interfaces;
 
-import com.example.education_spring_boot.dto.student.PaginatedList;
-import com.example.education_spring_boot.dto.student.StudentList;
+import com.example.education_spring_boot.dto.PaginatedList;
+import com.example.education_spring_boot.dto.student.detail.PersonalInformation;
+import com.example.education_spring_boot.dto.student.detail.StudentDetail;
+import com.example.education_spring_boot.dto.student.list.StudentList;
 import com.example.education_spring_boot.model.Student;
 
 import java.util.List;
@@ -17,5 +19,5 @@ public interface StudentService {
         List<String> department,
         String search
     );
-    public Student getStudentDetail();
+    public PersonalInformation getStudentDetail(String identity);
 }

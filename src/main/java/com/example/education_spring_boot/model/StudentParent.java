@@ -21,7 +21,7 @@ public class StudentParent {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "student_id", referencedColumnName = "studentId", nullable = false)
+    @JoinColumn(name = "student_id", referencedColumnName = "id", nullable = false)
     private Student studentId;
 
     @Column(name = "full_name", length = 100, nullable = false)
