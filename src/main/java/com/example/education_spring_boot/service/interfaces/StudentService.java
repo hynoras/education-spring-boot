@@ -1,6 +1,7 @@
 package com.example.education_spring_boot.service.interfaces;
 
 import com.example.education_spring_boot.dto.PaginatedList;
+import com.example.education_spring_boot.dto.student.detail.ParentInformation;
 import com.example.education_spring_boot.dto.student.detail.PersonalInformation;
 import com.example.education_spring_boot.dto.student.detail.StudentDetail;
 import com.example.education_spring_boot.dto.student.list.StudentList;
@@ -19,5 +20,5 @@ public interface StudentService {
         List<String> department,
         String search
     );
-    public PersonalInformation getStudentDetail(String identity);
+    public StudentDetail getStudentDetail(String identity);
 }

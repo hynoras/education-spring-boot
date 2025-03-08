@@ -1,6 +1,7 @@
 package com.example.education_spring_boot.dto.student.detail;
 
 import com.example.education_spring_boot.enums.GenderEnum;
+import com.example.education_spring_boot.model.StudentParent;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

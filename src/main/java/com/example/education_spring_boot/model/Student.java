@@ -12,18 +12,16 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "student")
 public class Student {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "identity")
+    private String identity;
 
     @OneToOne
     @JoinColumn(name = "account_id", nullable = false, unique = true)
     private Account account;
-
-    @Column(name = "identity", nullable = false, unique = true)
-    private String identity;
 
     @Column(name = "full_name", nullable = false, unique = true)
     private String fullName;

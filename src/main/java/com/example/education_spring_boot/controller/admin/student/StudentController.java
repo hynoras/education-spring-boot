@@ -51,8 +51,8 @@ public class StudentController {
 
     @GetMapping("/students/{identity}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<PersonalInformation> getStudentDetail(@PathVariable("identity") String identity) {
-        PersonalInformation response = studentService.getStudentDetail(identity);
+    public ResponseEntity<StudentDetail> getStudentDetail(@PathVariable("identity") String identity) {
+        StudentDetail response = studentService.getStudentDetail(identity);
         return ResponseEntity.ok(response);
     }
 

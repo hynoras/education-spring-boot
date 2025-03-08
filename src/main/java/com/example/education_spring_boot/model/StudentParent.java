@@ -2,10 +2,8 @@ package com.example.education_spring_boot.model;
 
 import com.example.education_spring_boot.enums.ParentRelationshipEnum;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 
@@ -14,6 +12,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Table(name = "student_parent")
 public class StudentParent {
     @Id
@@ -21,7 +20,7 @@ public class StudentParent {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "student_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "student_id", referencedColumnName = "identity", nullable = false)
     private Student studentId;
 
     @Column(name = "full_name", length = 100, nullable = false)
