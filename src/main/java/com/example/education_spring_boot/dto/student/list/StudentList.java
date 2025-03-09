@@ -1,4 +1,4 @@
-package com.example.education_spring_boot.dto.student;
+package com.example.education_spring_boot.dto.student.list;
 
 import com.example.education_spring_boot.enums.GenderEnum;
 import lombok.*;

@@ -1,8 +1,13 @@
 package com.example.education_spring_boot.service.admin.student;
 
-import com.example.education_spring_boot.dto.student.PaginatedList;
-import com.example.education_spring_boot.dto.student.StudentList;
+import com.example.education_spring_boot.dto.PaginatedList;
+import com.example.education_spring_boot.dto.student.detail.ParentInformation;
+import com.example.education_spring_boot.dto.student.detail.PersonalInformation;
+import com.example.education_spring_boot.dto.student.detail.StudentDetail;
+import com.example.education_spring_boot.dto.student.list.StudentList;
 import com.example.education_spring_boot.model.Student;
+import com.example.education_spring_boot.model.StudentParent;
+import com.example.education_spring_boot.repository.StudentParentRepo;
 import com.example.education_spring_boot.repository.StudentRepo;
 import com.example.education_spring_boot.service.interfaces.StudentService;
 import com.example.education_spring_boot.specs.StudentSpecification;
@@ -19,11 +24,13 @@ import java.util.List;
 @Service
 public class StudentServiceImpl implements StudentService {
     private final StudentRepo studentRepo;
+    private final StudentParentRepo studentParentRepo;
     private final StudentSpecification studentSpecification;
 
     @Autowired
-    public StudentServiceImpl(StudentRepo studentRepo, StudentSpecification studentSpecification) {
+    public StudentServiceImpl(StudentRepo studentRepo, StudentParentRepo studentParentRepo, StudentSpecification studentSpecification) {
         this.studentRepo = studentRepo;
+        this.studentParentRepo = studentParentRepo;
         this.studentSpecification = studentSpecification;
     }
 
@@ -73,7 +80,12 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public Student getStudentDetail() {
-        return null;
+    public StudentDetail getStudentDetail(String identity) {
+        PersonalInformation personalInformation = studentRepo.findByIdentity(identity);
+        List<ParentInformation> parentInformation = studentParentRepo.findByIdentity(identity);
+        return new StudentDetail(
+            personalInformation,
+            parentInformation
+        );
     }
 }

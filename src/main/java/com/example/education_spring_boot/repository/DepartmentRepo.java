@@ -1,6 +1,6 @@
 package com.example.education_spring_boot.repository;
 
-import com.example.education_spring_boot.dto.student.department.DepartmentNameList;
+import com.example.education_spring_boot.dto.department.DepartmentNameList;
 import com.example.education_spring_boot.model.Department;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface DepartmentRepo extends JpaRepository<Department, Long> {
     @Query(
-        "SELECT new com.example.education_spring_boot.dto.student.department.DepartmentNameList" +
+        "SELECT new com.example.education_spring_boot.dto.department.DepartmentNameList" +
         "(d.departmentName)" +
         " FROM Department d"
     )

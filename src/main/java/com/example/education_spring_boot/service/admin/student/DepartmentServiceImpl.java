@@ -1,6 +1,6 @@
 package com.example.education_spring_boot.service.admin.student;
 
-import com.example.education_spring_boot.dto.student.department.DepartmentNameList;
+import com.example.education_spring_boot.dto.department.DepartmentNameList;
 import com.example.education_spring_boot.repository.DepartmentRepo;
 import com.example.education_spring_boot.service.interfaces.DepartmentService;
 import org.springframework.stereotype.Service;
