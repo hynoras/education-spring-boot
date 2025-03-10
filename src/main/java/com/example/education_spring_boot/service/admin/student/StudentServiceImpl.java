@@ -1,12 +1,11 @@
 package com.example.education_spring_boot.service.admin.student;
 
-import com.example.education_spring_boot.dto.PaginatedList;
-import com.example.education_spring_boot.dto.student.detail.ParentInformation;
-import com.example.education_spring_boot.dto.student.detail.PersonalInformation;
-import com.example.education_spring_boot.dto.student.detail.StudentDetail;
-import com.example.education_spring_boot.dto.student.list.StudentList;
-import com.example.education_spring_boot.model.Student;
-import com.example.education_spring_boot.model.StudentParent;
+import com.example.education_spring_boot.model.dto.PaginatedList;
+import com.example.education_spring_boot.model.dto.student.detail.ParentInformation;
+import com.example.education_spring_boot.model.dto.student.detail.PersonalInformation;
+import com.example.education_spring_boot.model.dto.student.detail.StudentDetail;
+import com.example.education_spring_boot.model.dto.student.list.StudentList;
+import com.example.education_spring_boot.model.entity.Student;
 import com.example.education_spring_boot.repository.StudentParentRepo;
 import com.example.education_spring_boot.repository.StudentRepo;
 import com.example.education_spring_boot.service.interfaces.StudentService;

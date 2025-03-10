@@ -1,9 +1,8 @@
 package com.example.education_spring_boot.controller.auth;
 
-import com.example.education_spring_boot.dto.account.LoginRequest;
-import com.example.education_spring_boot.dto.account.RegisterRequest;
+import com.example.education_spring_boot.model.dto.account.LoginRequest;
+import com.example.education_spring_boot.model.dto.account.RegisterRequest;
 import com.example.education_spring_boot.service.auth.AccountServiceImpl;
-import com.example.education_spring_boot.util.CookieUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

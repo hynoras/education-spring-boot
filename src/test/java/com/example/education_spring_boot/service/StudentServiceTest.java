@@ -1,11 +1,9 @@
 package com.example.education_spring_boot.service;
 
-import com.example.education_spring_boot.dto.student.detail.PersonalInformation;
+import com.example.education_spring_boot.model.dto.student.detail.PersonalInformation;
 import com.example.education_spring_boot.enums.GenderEnum;
-import com.example.education_spring_boot.model.Student;
 import com.example.education_spring_boot.repository.StudentRepo;
 import com.example.education_spring_boot.service.admin.student.StudentServiceImpl;
-import com.example.education_spring_boot.service.interfaces.StudentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,9 +12,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.LocalDate;
 

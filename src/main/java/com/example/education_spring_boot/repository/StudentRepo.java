@@ -1,8 +1,7 @@
 package com.example.education_spring_boot.repository;
 
-import com.example.education_spring_boot.dto.student.detail.PersonalInformation;
-import com.example.education_spring_boot.dto.student.detail.StudentDetail;
-import com.example.education_spring_boot.model.Student;
+import com.example.education_spring_boot.model.dto.student.detail.PersonalInformation;
+import com.example.education_spring_boot.model.entity.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,7 +18,7 @@ public interface StudentRepo extends JpaRepository<Student, Long>, JpaSpecificat
     Page<Student> findAll(Specification<Student> spec, Pageable pageable);
 
     @Query(
-        "SELECT new com.example.education_spring_boot.dto.student.detail.PersonalInformation" +
+        "SELECT new com.example.education_spring_boot.model.dto.student.detail.PersonalInformation" +
         "(s.identity, s.fullName, s.birthDate, s.gender, s.permanentAddress, s.temporaryAddress, s.ethnicGroup, s.religion, s.citizenId, s.priorityGroup) " +
         "FROM Student s " +
         "WHERE s.identity = :identity"

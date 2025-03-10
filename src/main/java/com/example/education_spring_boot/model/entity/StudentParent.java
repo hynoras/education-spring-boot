@@ -1,9 +1,8 @@
-package com.example.education_spring_boot.model;
+package com.example.education_spring_boot.model.entity;
 
 import com.example.education_spring_boot.enums.ParentRelationshipEnum;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
 

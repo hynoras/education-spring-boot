@@ -1,4 +1,4 @@
-package com.example.education_spring_boot.dto.major;
+package com.example.education_spring_boot.model.dto.department;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MajorNameList {
-    private String major_name;
+public class DepartmentNameList {
+    private String department_name;
 }

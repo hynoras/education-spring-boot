@@ -1,10 +1,8 @@
 package com.example.education_spring_boot.controller.admin.student;
 
-import com.example.education_spring_boot.dto.PaginatedList;
-import com.example.education_spring_boot.dto.student.detail.PersonalInformation;
-import com.example.education_spring_boot.dto.student.detail.StudentDetail;
-import com.example.education_spring_boot.dto.student.list.StudentList;
-import com.example.education_spring_boot.model.Student;
+import com.example.education_spring_boot.model.dto.PaginatedList;
+import com.example.education_spring_boot.model.dto.student.detail.StudentDetail;
+import com.example.education_spring_boot.model.dto.student.list.StudentList;
 import com.example.education_spring_boot.service.admin.student.StudentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,15 +25,16 @@ public class StudentController {
     @GetMapping("/students")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<PaginatedList<StudentList>> getAllStudent(
-        @RequestParam(defaultValue = "0") Integer currentPage,
-        @RequestParam(defaultValue = "10") Integer pageSize,
-        @RequestParam(defaultValue = "identity") String sortBy,
-        @RequestParam(defaultValue = "desc") String sortOrder,
-        @RequestParam(defaultValue = "", required = false) List<String> gender,
-        @RequestParam(defaultValue = "", required = false) List<String> major,
-        @RequestParam(defaultValue = "", required = false) List<String> department,
-        @RequestParam(defaultValue = "") String search
+        @RequestParam(name = "currentPage", defaultValue = "0") Integer currentPage,
+        @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+        @RequestParam(name = "sortBy", defaultValue = "identity") String sortBy,
+        @RequestParam(name = "sortOrder", defaultValue = "desc") String sortOrder,
+        @RequestParam(name = "gender", required = false) List<String> gender,
+        @RequestParam(name = "major", required = false) List<String> major,
+        @RequestParam(name = "department", required = false) List<String> department,
+        @RequestParam(name = "search", required = false, defaultValue = "") String search
     ) {
+
         PaginatedList<StudentList> response = studentService.getAllStudent(
             currentPage,
             pageSize,

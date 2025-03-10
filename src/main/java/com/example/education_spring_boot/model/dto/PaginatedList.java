@@ -1,4 +1,4 @@
-package com.example.education_spring_boot.dto;
+package com.example.education_spring_boot.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

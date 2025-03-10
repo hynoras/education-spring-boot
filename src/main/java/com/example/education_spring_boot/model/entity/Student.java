@@ -1,4 +1,4 @@
-package com.example.education_spring_boot.model;
+package com.example.education_spring_boot.model.entity;
 
 import com.example.education_spring_boot.enums.GenderEnum;
 import jakarta.persistence.*;

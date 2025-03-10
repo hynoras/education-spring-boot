@@ -1,4 +1,4 @@
-package com.example.education_spring_boot.dto.account;
+package com.example.education_spring_boot.model.dto.account;
 
 import com.example.education_spring_boot.enums.RoleEnum;
 import jakarta.validation.constraints.Email;

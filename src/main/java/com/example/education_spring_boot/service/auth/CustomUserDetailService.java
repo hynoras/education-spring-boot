@@ -1,7 +1,7 @@
 package com.example.education_spring_boot.service.auth;
 
-import com.example.education_spring_boot.dto.account.CustomUserDetails;
-import com.example.education_spring_boot.model.Account;
+import com.example.education_spring_boot.model.dto.account.CustomUserDetails;
+import com.example.education_spring_boot.model.entity.Account;
 import com.example.education_spring_boot.repository.AccountRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
