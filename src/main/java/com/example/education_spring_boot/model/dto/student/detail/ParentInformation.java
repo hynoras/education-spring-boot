@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Builder
 public class ParentInformation {
     private String full_name;
-    private LocalDate birth_date;
+    private LocalDate date_of_birth;
     private String nationality;
     private String permanent_address;
     private ParentRelationshipEnum relationship;

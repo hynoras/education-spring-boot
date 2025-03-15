@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/admin")
@@ -55,4 +56,10 @@ public class StudentController {
         return ResponseEntity.ok(response);
     }
 
+    @PutMapping("students/update/{identity}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<String> updateStudentDetail(@PathVariable("identity") String identity,  @RequestBody Map<String, Object> request) {
+        String response = studentService.updateStudentDetail(identity, request);
+        return ResponseEntity.ok(response);
+    }
 }

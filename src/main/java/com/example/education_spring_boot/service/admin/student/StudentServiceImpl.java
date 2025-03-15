@@ -1,5 +1,6 @@
 package com.example.education_spring_boot.service.admin.student;
 
+import com.example.education_spring_boot.enums.GenderEnum;
 import com.example.education_spring_boot.model.dto.PaginatedList;
 import com.example.education_spring_boot.model.dto.student.detail.ParentInformation;
 import com.example.education_spring_boot.model.dto.student.detail.PersonalInformation;
@@ -16,21 +17,28 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class StudentServiceImpl implements StudentService {
     private final StudentRepo studentRepo;
     private final StudentParentRepo studentParentRepo;
     private final StudentSpecification studentSpecification;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public StudentServiceImpl(StudentRepo studentRepo, StudentParentRepo studentParentRepo, StudentSpecification studentSpecification) {
+    public StudentServiceImpl(StudentRepo studentRepo, StudentParentRepo studentParentRepo, StudentSpecification studentSpecification, JdbcTemplate jdbcTemplate) {
         this.studentRepo = studentRepo;
         this.studentParentRepo = studentParentRepo;
         this.studentSpecification = studentSpecification;
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     @Override
@@ -86,5 +94,25 @@ public class StudentServiceImpl implements StudentService {
             personalInformation,
             parentInformation
         );
+    }
+
+    @Override
+    @Transactional
+    public String updateStudentDetail(String identity, Map<String, Object> updateColumns) {
+        try {
+            StringBuilder sql = new StringBuilder("UPDATE student SET ");
+            List<Object> params = new ArrayList<>();
+            updateColumns.forEach((key, value) -> {
+                sql.append(key).append(" = ?, ");
+                params.add(value);
+            });
+            sql.delete(sql.length() - 2, sql.length() - 1);
+            sql.append("WHERE identity = ?");
+            params.add(identity);
+            jdbcTemplate.update(sql.toString(), params.toArray());
+            return "Updated student " + identity + " successfully!";
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to update student personal information: ", e);
+        }
     }
 }

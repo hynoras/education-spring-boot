@@ -22,6 +22,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	implementation 'org.hibernate:hibernate-core:6.6.4.Final'
 	implementation 'org.postgresql:postgresql'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
