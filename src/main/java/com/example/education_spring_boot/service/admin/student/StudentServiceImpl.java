@@ -1,6 +1,5 @@
 package com.example.education_spring_boot.service.admin.student;
 
-import com.example.education_spring_boot.enums.GenderEnum;
 import com.example.education_spring_boot.model.dto.PaginatedList;
 import com.example.education_spring_boot.model.dto.student.detail.ParentInformation;
 import com.example.education_spring_boot.model.dto.student.detail.PersonalInformation;
@@ -21,7 +20,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +106,14 @@ public class StudentServiceImpl implements StudentService {
         try {
             StringBuilder sql = new StringBuilder("UPDATE student SET ");
             List<Object> params = new ArrayList<>();
+            if (updateColumns.containsKey("birth_date")) {
+                System.out.println("birth_date BEFORE: " + updateColumns.get("birth_date"));
+                LocalDate localDate = Instant.parse(updateColumns.get("birth_date").toString())
+                                                .atZone(ZoneId.of("Asia/Bangkok"))
+                                                .toLocalDate();
+                updateColumns.put("birth_date", localDate);
+                System.out.println("birth_date AFTER: " + updateColumns.get("birth_date"));
+            }
             updateColumns.forEach((key, value) -> {
                 sql.append(key).append(" = ?, ");
                 params.add(value);
@@ -109,6 +121,8 @@ public class StudentServiceImpl implements StudentService {
             sql.delete(sql.length() - 2, sql.length() - 1);
             sql.append("WHERE identity = ?");
             params.add(identity);
+            System.out.println("updateColumns: " + updateColumns);
+            System.out.println("SQL QUERY: " + sql);
             jdbcTemplate.update(sql.toString(), params.toArray());
             return "Updated student " + identity + " successfully!";
         } catch (Exception e) {

@@ -26,7 +26,7 @@ public class Student {
     @Column(name = "full_name", nullable = false, unique = true)
     private String fullName;
 
-    @Column(name = "birth_date")
+    @Column(name = "birth_date", columnDefinition = "DATE")
     private LocalDate birthDate;
 
     @Enumerated(EnumType.STRING)
