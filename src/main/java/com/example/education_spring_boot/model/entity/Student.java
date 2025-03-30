@@ -52,13 +52,12 @@ public class Student {
     @ColumnDefault("'Unknown'")
     private String citizenId;
 
+    @Column(name = "image")
+    private String image;
+
     @ManyToOne
     @JoinColumn(name = "province_id")
     private Location province;
-
-    @Column(name = "priority_group", length = 20, nullable = false)
-    @ColumnDefault("'None'")
-    private String priorityGroup;
 
     @ManyToOne
     @JoinColumn(name = "major_id")

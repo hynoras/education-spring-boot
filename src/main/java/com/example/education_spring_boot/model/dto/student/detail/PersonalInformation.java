@@ -20,5 +20,4 @@ public class PersonalInformation {
     private String ethnic_group;
     private String religion;
     private String citizen_id;
-    private String priority_group;
 }
