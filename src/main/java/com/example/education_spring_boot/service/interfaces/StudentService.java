@@ -4,6 +4,7 @@ import com.example.education_spring_boot.enums.GenderEnum;
 import com.example.education_spring_boot.model.dto.PaginatedList;
 import com.example.education_spring_boot.model.dto.student.detail.StudentDetail;
 import com.example.education_spring_boot.model.dto.student.list.StudentList;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -22,4 +23,5 @@ public interface StudentService {
     );
     public StudentDetail getStudentDetail(String identity);
     public String updateStudentDetail(String identity, Map<String, Object> updateColumns);
+    public String updateStudentAvatar(String identity, MultipartFile image);
 }

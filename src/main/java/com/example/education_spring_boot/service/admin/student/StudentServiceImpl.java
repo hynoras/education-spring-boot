@@ -19,6 +19,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
 import java.time.LocalDate;
@@ -120,6 +121,24 @@ public class StudentServiceImpl implements StudentService {
             return "Updated student " + identity + " successfully!";
         } catch (Exception e) {
             throw new RuntimeException("Failed to update student personal information: ", e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public String updateStudentAvatar(String identity, MultipartFile image) {
+        try {
+            List<Object> params = new ArrayList<>();
+            if (image != null) {
+                String imageName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
+                String imageUrl = "https://education-spring-boot-production.up.railway.app/" + imageName;
+                params.add(imageUrl);
+            }
+            params.add(identity);
+            jdbcTemplate.update("UPDATE student SET image = ? WHERE identity = ?", params.toArray());
+            return "Updated student image of " + identity + " successfully!";
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to update student avatar: ", e);
         }
     }
 }

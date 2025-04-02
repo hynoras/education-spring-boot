@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -49,17 +50,30 @@ public class StudentController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/students/{identity}")
+    @GetMapping("/student/{identity}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<StudentDetail> getStudentDetail(@PathVariable("identity") String identity) {
         StudentDetail response = studentService.getStudentDetail(identity);
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("students/update/{identity}")
+    @PutMapping("student/{identity}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> updateStudentDetail(@PathVariable("identity") String identity,  @RequestBody Map<String, Object> request) {
+    public ResponseEntity<String> updateStudentDetail(
+        @PathVariable("identity") String identity,
+        @RequestBody Map<String, Object> request
+    ) {
         String response = studentService.updateStudentDetail(identity, request);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("student/avatar/{identity}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<String> updateStudentDetail(
+            @PathVariable("identity") String identity,
+            @RequestParam("avatar") MultipartFile avatar
+    ) {
+        String response = studentService.updateStudentAvatar(identity, avatar);
         return ResponseEntity.ok(response);
     }
 }
