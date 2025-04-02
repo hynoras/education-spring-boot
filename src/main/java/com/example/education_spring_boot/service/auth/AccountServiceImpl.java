@@ -57,14 +57,13 @@ public class AccountServiceImpl implements AccountService {
     public Map<String, String> login(LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
             );
+            String token = "";
             if (authentication.isAuthenticated()) {
-                String token = jwtUtil.generateToken(loginRequest.getUsername());
-                return Map.of("token", token);
-            } else {
-                throw new BadCredentialsException("Username or password is incorrect!");
+                token = jwtUtil.generateToken(loginRequest.getUsername());
             }
+            return Map.of("token", token);
         } catch (DataAccessException e) {
             throw new DatabaseException("An error occurred when authenticating: ", e);
         }
