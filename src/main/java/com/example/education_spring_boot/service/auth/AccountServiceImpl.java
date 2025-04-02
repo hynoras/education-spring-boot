@@ -1,5 +1,6 @@
 package com.example.education_spring_boot.service.auth;
 
+import com.example.education_spring_boot.exception.DatabaseException;
 import com.example.education_spring_boot.model.dto.account.LoginRequest;
 import com.example.education_spring_boot.model.dto.account.RegisterRequest;
 import com.example.education_spring_boot.model.entity.Account;
@@ -7,6 +8,7 @@ import com.example.education_spring_boot.repository.AccountRepo;
 import com.example.education_spring_boot.service.interfaces.AccountService;
 import com.example.education_spring_boot.util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,9 +49,8 @@ public class AccountServiceImpl implements AccountService {
             account.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
             accountRepo.save(account);
             return "Successfully created account!";
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Authorization failed: " + e.getMessage());
+        } catch (DataAccessException e) {
+            throw new DatabaseException("An error occurred when authorizing: ", e);
         }
     }
 
@@ -61,9 +62,11 @@ public class AccountServiceImpl implements AccountService {
             if (authentication.isAuthenticated()) {
                 String token = jwtUtil.generateToken(loginRequest.getUsername());
                 return Map.of("token", token);
-            } else { throw new UsernameNotFoundException("Username is invalid!"); }
-        } catch (Exception e) {
-            throw new RuntimeException("Authentication failed: " + e.getMessage());
+            } else {
+                throw new BadCredentialsException("Username or password is incorrect!");
+            }
+        } catch (DataAccessException e) {
+            throw new DatabaseException("An error occurred when authenticating: ", e);
         }
     }
 
@@ -77,13 +80,12 @@ public class AccountServiceImpl implements AccountService {
             "username", authentication.getName(),
             "role", role
             );
-        } catch (Exception e) {
-            if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
-                throw new BadCredentialsException("User not authenticated");
+        } catch (DataAccessException e) {
+            if (!authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
+                throw new BadCredentialsException("Username or password is incorrect!");
             }
             else {
-                e.printStackTrace();
-                throw new RuntimeException("Failed to get account detail: " + e.getMessage());
+                throw new DatabaseException("An error occurred when fetching account details: ", e);
             }
         }
     }
