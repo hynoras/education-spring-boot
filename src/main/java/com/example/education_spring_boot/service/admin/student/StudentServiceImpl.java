@@ -1,5 +1,7 @@
 package com.example.education_spring_boot.service.admin.student;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.education_spring_boot.model.dto.PaginatedList;
 import com.example.education_spring_boot.model.dto.student.detail.ParentInformation;
 import com.example.education_spring_boot.model.dto.student.detail.PersonalInformation;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -34,13 +37,21 @@ public class StudentServiceImpl implements StudentService {
     private final StudentParentRepo studentParentRepo;
     private final StudentSpecification studentSpecification;
     private final JdbcTemplate jdbcTemplate;
+    private final Cloudinary cloudinary;
 
     @Autowired
-    public StudentServiceImpl(StudentRepo studentRepo, StudentParentRepo studentParentRepo, StudentSpecification studentSpecification, JdbcTemplate jdbcTemplate) {
+    public StudentServiceImpl(
+        StudentRepo studentRepo,
+        StudentParentRepo studentParentRepo,
+        StudentSpecification studentSpecification,
+        JdbcTemplate jdbcTemplate,
+        Cloudinary cloudinary
+    ) {
         this.studentRepo = studentRepo;
         this.studentParentRepo = studentParentRepo;
         this.studentSpecification = studentSpecification;
         this.jdbcTemplate = jdbcTemplate;
+        this.cloudinary = cloudinary;
     }
 
     @Override
@@ -122,6 +133,13 @@ public class StudentServiceImpl implements StudentService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to update student personal information: ", e);
         }
+    }
+
+    public Map uploadFile(MultipartFile file, String folderName) throws IOException {
+        return cloudinary.uploader().upload(file.getBytes(),
+            ObjectUtils.asMap(
+                    "folder", folderName
+            ));
     }
 
     @Override

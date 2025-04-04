@@ -10,6 +10,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -65,6 +66,13 @@ public class StudentController {
     ) {
         String response = studentService.updateStudentDetail(identity, request);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("student/avatar/upload/image")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file,
+                                         @RequestParam("folder") String folderName) throws IOException {
+        return ResponseEntity.ok(studentService.uploadFile(file, folderName));
     }
 
     @PutMapping("student/avatar/{identity}")
