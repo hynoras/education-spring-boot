@@ -6,6 +6,7 @@ import com.example.education_spring_boot.model.dto.student.detail.StudentDetail;
 import com.example.education_spring_boot.model.dto.student.list.StudentList;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -23,5 +24,5 @@ public interface StudentService {
     );
     public StudentDetail getStudentDetail(String identity);
     public String updateStudentDetail(String identity, Map<String, Object> updateColumns);
-    public String updateStudentAvatar(String identity, MultipartFile image);
+    public String uploadStudentAvatar(MultipartFile avatar, String identity) throws IOException;
 }

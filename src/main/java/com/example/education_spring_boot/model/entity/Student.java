@@ -52,8 +52,8 @@ public class Student {
     @ColumnDefault("'Unknown'")
     private String citizenId;
 
-    @Column(name = "image")
-    private String image;
+    @Column(name = "avatar")
+    private String avatar;
 
     @ManyToOne
     @JoinColumn(name = "province_id")

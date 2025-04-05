@@ -68,20 +68,12 @@ public class StudentController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("student/avatar/upload/image")
+    @PostMapping("student/avatar/{identity}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<?> uploadImage(@RequestParam("file") MultipartFile file,
-                                         @RequestParam("folder") String folderName) throws IOException {
-        return ResponseEntity.ok(studentService.uploadFile(file, folderName));
-    }
-
-    @PutMapping("student/avatar/{identity}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> updateStudentDetail(
-            @PathVariable("identity") String identity,
-            @RequestParam("avatar") MultipartFile avatar
-    ) {
-        String response = studentService.updateStudentAvatar(identity, avatar);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<String> uploadImage(
+        @RequestParam("avatar") MultipartFile avatar,
+        @PathVariable("identity") String identity
+    ) throws IOException {
+        return ResponseEntity.ok(studentService.uploadStudentAvatar(avatar, identity));
     }
 }

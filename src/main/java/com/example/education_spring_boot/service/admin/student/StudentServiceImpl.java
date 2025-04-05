@@ -2,6 +2,7 @@ package com.example.education_spring_boot.service.admin.student;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.example.education_spring_boot.exception.DatabaseException;
 import com.example.education_spring_boot.model.dto.PaginatedList;
 import com.example.education_spring_boot.model.dto.student.detail.ParentInformation;
 import com.example.education_spring_boot.model.dto.student.detail.PersonalInformation;
@@ -13,6 +14,7 @@ import com.example.education_spring_boot.repository.StudentRepo;
 import com.example.education_spring_boot.service.interfaces.StudentService;
 import com.example.education_spring_boot.specs.StudentSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -135,28 +137,21 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
-    public Map uploadFile(MultipartFile file, String folderName) throws IOException {
-        return cloudinary.uploader().upload(file.getBytes(),
-            ObjectUtils.asMap(
-                    "folder", folderName
-            ));
-    }
-
     @Override
     @Transactional
-    public String updateStudentAvatar(String identity, MultipartFile image) {
+    public String uploadStudentAvatar(MultipartFile avatar, String identity) throws IOException {
         try {
-            List<Object> params = new ArrayList<>();
-            if (image != null) {
-                String imageName = System.currentTimeMillis() + "_" + image.getOriginalFilename();
-                String imageUrl = "https://education-spring-boot-production.up.railway.app/" + imageName;
-                params.add(imageUrl);
-            }
-            params.add(identity);
-            jdbcTemplate.update("UPDATE student SET image = ? WHERE identity = ?", params.toArray());
-            return "Updated student image of " + identity + " successfully!";
+            Map result = cloudinary.uploader().upload(avatar.getBytes(),
+                ObjectUtils.asMap(
+                    "folder", "student-avatar",
+                    "public_id", avatar.getOriginalFilename(),
+                    "unique_filename", "false"
+                ));
+            String avatarURL = (String) result.get("url");
+            jdbcTemplate.update("UPDATE student SET avatar = ? WHERE identity = ?", avatarURL, identity);
+            return "Inserted student " + identity + " avatar successfully!";
         } catch (Exception e) {
-            throw new RuntimeException("Failed to update student avatar: ", e);
+            throw new RuntimeException("An error occurred when uploading avatar: ", e);
         }
     }
 }
