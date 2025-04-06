@@ -15,7 +15,7 @@ public interface StudentRepo extends JpaRepository<Student, Long>, JpaSpecificat
     Page<Student> findAll(Specification<Student> spec, Pageable pageable);
 
     @Query(
-        "SELECT new com.example.education_spring_boot.model.dto.student.detail.PersonalInformation" +
+        "SELECT new com.example.education_spring_boot.model.dto.student.detail.PersonalInfo" +
         "(s.identity, s.fullName, s.birthDate, s.gender, s.permanentAddress, s.temporaryAddress, s.ethnicGroup, s.religion, s.citizenId, s.avatar) " +
         "FROM Student s " +
         "WHERE s.identity = :identity"

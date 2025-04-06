@@ -56,11 +56,11 @@ public class Student {
     private String avatar;
 
     @ManyToOne
-    @JoinColumn(name = "province_id")
+    @JoinColumn(name = "province_id", referencedColumnName = "provinceid")
     private Location province;
 
     @ManyToOne
-    @JoinColumn(name = "major_id")
+    @JoinColumn(name = "major_id", referencedColumnName = "majorid")
     private Major major;
 }
 

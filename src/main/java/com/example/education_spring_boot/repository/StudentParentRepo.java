@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface StudentParentRepo extends JpaRepository<StudentParent, Long> {
     @Query(
-        "SELECT new com.example.education_spring_boot.model.dto.student.detail.ParentInformation" +
+        "SELECT new com.example.education_spring_boot.model.dto.student.detail.ParentInfo" +
         "(sp.fullName, sp.birthDate, sp.nationality, sp.permanentAddress, sp.relationship) " +
         "FROM StudentParent sp " +
         "WHERE sp.studentId.identity = :identity"

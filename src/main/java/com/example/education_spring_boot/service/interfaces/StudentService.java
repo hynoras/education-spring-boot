@@ -2,6 +2,7 @@ package com.example.education_spring_boot.service.interfaces;
 
 import com.example.education_spring_boot.enums.GenderEnum;
 import com.example.education_spring_boot.model.dto.PaginatedList;
+import com.example.education_spring_boot.model.dto.student.detail.PersonalInfoForm;
 import com.example.education_spring_boot.model.dto.student.detail.StudentDetail;
 import com.example.education_spring_boot.model.dto.student.list.StudentList;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,7 +24,7 @@ public interface StudentService {
         String search
     );
     public StudentDetail getStudentDetail(String identity);
-
+    public String addPersonalInfo(PersonalInfoForm personalInfoForm);
     public String updateStudentDetail(String identity, Map<String, Object> updateColumns);
     public String uploadStudentAvatar(MultipartFile avatar, String identity) throws IOException;
 }

@@ -6,8 +6,10 @@ import com.example.education_spring_boot.exception.DatabaseException;
 import com.example.education_spring_boot.model.dto.PaginatedList;
 import com.example.education_spring_boot.model.dto.student.detail.ParentInfo;
 import com.example.education_spring_boot.model.dto.student.detail.PersonalInfo;
+import com.example.education_spring_boot.model.dto.student.detail.PersonalInfoForm;
 import com.example.education_spring_boot.model.dto.student.detail.StudentDetail;
 import com.example.education_spring_boot.model.dto.student.list.StudentList;
+import com.example.education_spring_boot.model.entity.Location;
 import com.example.education_spring_boot.model.entity.Student;
 import com.example.education_spring_boot.repository.StudentParentRepo;
 import com.example.education_spring_boot.repository.StudentRepo;
@@ -32,6 +34,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -113,6 +116,26 @@ public class StudentServiceImpl implements StudentService {
         } catch (DataAccessException e) {
             throw new DatabaseException("An error occurred while fetching student details", e);
         }
+    }
+
+    @Override
+    public String addPersonalInfo(PersonalInfoForm personalInfoForm) {
+        Student student = new Student();
+        student.setIdentity(personalInfoForm.getIdentity());
+        student.setAccount(personalInfoForm.getAccount());
+        student.setFullName(personalInfoForm.getFull_name());
+        student.setBirthDate(personalInfoForm.getDate_of_birth());
+        student.setGender(personalInfoForm.getGender());
+        student.setPermanentAddress(Optional.ofNullable(personalInfoForm.getPermanent_address()).orElse("Unknown"));
+        student.setTemporaryAddress(personalInfoForm.getTemporary_address());
+        student.setEthnicGroup(Optional.ofNullable(personalInfoForm.getEthnic_group()).orElse("Unknown"));
+        student.setReligion(personalInfoForm.getReligion());
+        student.setCitizenId(Optional.ofNullable(personalInfoForm.getCitizen_id()).orElse("Unknown"));
+        student.setAvatar(personalInfoForm.getAvatar());
+        student.setProvince(personalInfoForm.getProvince());
+        student.setMajor(personalInfoForm.getMajor());
+        studentRepo.save(student);
+        return "Add student personal info successfully";
     }
 
     @Override

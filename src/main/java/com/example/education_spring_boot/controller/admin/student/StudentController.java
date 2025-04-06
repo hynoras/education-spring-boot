@@ -1,9 +1,11 @@
 package com.example.education_spring_boot.controller.admin.student;
 
 import com.example.education_spring_boot.model.dto.PaginatedList;
+import com.example.education_spring_boot.model.dto.student.detail.PersonalInfoForm;
 import com.example.education_spring_boot.model.dto.student.detail.StudentDetail;
 import com.example.education_spring_boot.model.dto.student.list.StudentList;
 import com.example.education_spring_boot.service.admin.student.StudentServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,6 +58,12 @@ public class StudentController {
     public ResponseEntity<StudentDetail> getStudentDetail(@PathVariable("identity") String identity) {
         StudentDetail response = studentService.getStudentDetail(identity);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("student")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<String> addPersonalInfo(@Valid @RequestBody PersonalInfoForm personalInfoForm) {
+        return ResponseEntity.ok(studentService.addPersonalInfo(personalInfoForm));
     }
 
     @PutMapping("student/{identity}")
