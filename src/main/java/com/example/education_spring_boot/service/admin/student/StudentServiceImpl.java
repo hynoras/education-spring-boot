@@ -96,19 +96,23 @@ public class StudentServiceImpl implements StudentService {
                 pagedResult.getTotalPages(),
                 pagedResult.isLast()
             );
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to fetch student list", e);
+        } catch (DataAccessException e) {
+            throw new DatabaseException("An error occurred while fetching student list", e);
         }
     }
 
     @Override
     public StudentDetail getStudentDetail(String identity) {
-        PersonalInformation personalInformation = studentRepo.findByIdentity(identity);
-        List<ParentInformation> parentInformation = studentParentRepo.findByIdentity(identity);
-        return new StudentDetail(
-            personalInformation,
-            parentInformation
-        );
+        try {
+            PersonalInformation personalInformation = studentRepo.findByIdentity(identity);
+            List<ParentInformation> parentInformation = studentParentRepo.findByIdentity(identity);
+            return new StudentDetail(
+                    personalInformation,
+                    parentInformation
+            );
+        } catch (DataAccessException e) {
+            throw new DatabaseException("An error occurred while fetching student details", e);
+        }
     }
 
     @Override
@@ -132,8 +136,8 @@ public class StudentServiceImpl implements StudentService {
             params.add(identity);
             jdbcTemplate.update(sql.toString(), params.toArray());
             return "Updated student " + identity + " successfully!";
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to update student personal information: ", e);
+        } catch (DataAccessException e) {
+            throw new DatabaseException("An error occurred while updating student personal information", e);
         }
     }
 
@@ -145,13 +149,13 @@ public class StudentServiceImpl implements StudentService {
                 ObjectUtils.asMap(
                     "folder", "student-avatar",
                     "public_id", avatar.getOriginalFilename(),
-                    "unique_filename", "false"
+                    "unique_filename", "true"
                 ));
             String avatarURL = (String) result.get("url");
             jdbcTemplate.update("UPDATE student SET avatar = ? WHERE identity = ?", avatarURL, identity);
             return "Inserted student " + identity + " avatar successfully!";
-        } catch (Exception e) {
-            throw new RuntimeException("An error occurred when uploading avatar: ", e);
+        } catch (DataAccessException e) {
+            throw new DatabaseException("An error occurred when uploading avatar", e);
         }
     }
 }
