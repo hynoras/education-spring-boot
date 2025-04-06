@@ -20,7 +20,7 @@ public interface StudentRepo extends JpaRepository<Student, Long>, JpaSpecificat
 
     @Query(
         "SELECT new com.example.education_spring_boot.model.dto.student.detail.PersonalInformation" +
-        "(s.identity, s.fullName, s.birthDate, s.gender, s.permanentAddress, s.temporaryAddress, s.ethnicGroup, s.religion, s.citizenId) " +
+        "(s.identity, s.fullName, s.birthDate, s.gender, s.permanentAddress, s.temporaryAddress, s.ethnicGroup, s.religion, s.citizenId, s.avatar) " +
         "FROM Student s " +
         "WHERE s.identity = :identity"
     )

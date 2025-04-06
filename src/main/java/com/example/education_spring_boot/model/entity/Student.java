@@ -20,7 +20,7 @@ public class Student {
     private String identity;
 
     @OneToOne
-    @JoinColumn(name = "account_id", nullable = false, unique = true)
+    @JoinColumn(name = "account_id", unique = true)
     private Account account;
 
     @Column(name = "full_name", nullable = false, unique = true)
