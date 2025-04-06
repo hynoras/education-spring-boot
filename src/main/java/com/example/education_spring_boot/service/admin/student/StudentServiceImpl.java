@@ -4,8 +4,8 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.education_spring_boot.exception.DatabaseException;
 import com.example.education_spring_boot.model.dto.PaginatedList;
-import com.example.education_spring_boot.model.dto.student.detail.ParentInformation;
-import com.example.education_spring_boot.model.dto.student.detail.PersonalInformation;
+import com.example.education_spring_boot.model.dto.student.detail.ParentInfo;
+import com.example.education_spring_boot.model.dto.student.detail.PersonalInfo;
 import com.example.education_spring_boot.model.dto.student.detail.StudentDetail;
 import com.example.education_spring_boot.model.dto.student.list.StudentList;
 import com.example.education_spring_boot.model.entity.Student;
@@ -104,8 +104,8 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public StudentDetail getStudentDetail(String identity) {
         try {
-            PersonalInformation personalInformation = studentRepo.findByIdentity(identity);
-            List<ParentInformation> parentInformation = studentParentRepo.findByIdentity(identity);
+            PersonalInfo personalInformation = studentRepo.findByIdentity(identity);
+            List<ParentInfo> parentInformation = studentParentRepo.findByIdentity(identity);
             return new StudentDetail(
                     personalInformation,
                     parentInformation

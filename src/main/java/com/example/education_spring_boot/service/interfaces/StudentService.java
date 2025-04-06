@@ -23,6 +23,7 @@ public interface StudentService {
         String search
     );
     public StudentDetail getStudentDetail(String identity);
+
     public String updateStudentDetail(String identity, Map<String, Object> updateColumns);
     public String uploadStudentAvatar(MultipartFile avatar, String identity) throws IOException;
 }

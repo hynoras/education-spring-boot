@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class PersonalInformation {
+public class PersonalInfo {
     private String identity;
     private String full_name;
     private LocalDate date_of_birth;

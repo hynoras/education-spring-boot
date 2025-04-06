@@ -12,6 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudentDetail {
-    private PersonalInformation personal_information;
-    private List<ParentInformation> parent_information;
+    private PersonalInfo personal_information;
+    private List<ParentInfo> parent_information;
 }
