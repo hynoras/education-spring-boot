@@ -1,4 +1,4 @@
-package com.example.education_spring_boot.util.JSONUtil;
+package com.example.education_spring_boot.utils.JSONUtils;
 
 import com.example.education_spring_boot.exception.ResourceNotFoundException;
 import com.example.education_spring_boot.model.entity.Major;

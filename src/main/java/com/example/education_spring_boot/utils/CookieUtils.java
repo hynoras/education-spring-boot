@@ -1,10 +1,10 @@
-package com.example.education_spring_boot.util;
+package com.example.education_spring_boot.utils;
 
 import jakarta.servlet.http.Cookie;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CookieUtil {
+public class CookieUtils {
     public Cookie generateCookie(String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
         cookie.setHttpOnly(true);

@@ -1,10 +1,8 @@
-package com.example.education_spring_boot.util.JSONUtil;
+package com.example.education_spring_boot.utils.JSONUtils;
 
 import com.example.education_spring_boot.exception.ResourceNotFoundException;
 import com.example.education_spring_boot.model.entity.Location;
-import com.example.education_spring_boot.model.entity.Major;
 import com.example.education_spring_boot.repository.LocationRepo;
-import com.example.education_spring_boot.repository.MajorRepo;
 import com.fasterxml.jackson.core.JacksonException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

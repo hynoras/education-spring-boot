@@ -6,7 +6,7 @@ import com.example.education_spring_boot.model.dto.account.RegisterRequest;
 import com.example.education_spring_boot.model.entity.Account;
 import com.example.education_spring_boot.repository.AccountRepo;
 import com.example.education_spring_boot.service.interfaces.AccountService;
-import com.example.education_spring_boot.util.JwtUtil;
+import com.example.education_spring_boot.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,7 +15,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -27,17 +26,17 @@ public class AccountServiceImpl implements AccountService {
     private final AccountRepo accountRepo;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
+    private final JwtUtils jwtUtils;
 
     @Autowired
     public AccountServiceImpl(AccountRepo accountRepo,
                               PasswordEncoder passwordEncoder,
                               AuthenticationManager authenticationManager,
-                              JwtUtil jwtUtil) {
+                              JwtUtils jwtUtils) {
         this.accountRepo = accountRepo;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
+        this.jwtUtils = jwtUtils;
     }
 
     public String register(RegisterRequest registerRequest) {
@@ -61,7 +60,7 @@ public class AccountServiceImpl implements AccountService {
             );
             String token = "";
             if (authentication.isAuthenticated()) {
-                token = jwtUtil.generateToken(loginRequest.getUsername());
+                token = jwtUtils.generateToken(loginRequest.getUsername());
             }
             return Map.of("token", token);
         } catch (DataAccessException e) {

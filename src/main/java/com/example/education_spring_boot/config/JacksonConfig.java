@@ -2,8 +2,8 @@ package com.example.education_spring_boot.config;
 
 import com.example.education_spring_boot.model.entity.Location;
 import com.example.education_spring_boot.model.entity.Major;
-import com.example.education_spring_boot.util.JSONUtil.LocationDeserializer;
-import com.example.education_spring_boot.util.JSONUtil.MajorDeserializer;
+import com.example.education_spring_boot.utils.JSONUtils.LocationDeserializer;
+import com.example.education_spring_boot.utils.JSONUtils.MajorDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
