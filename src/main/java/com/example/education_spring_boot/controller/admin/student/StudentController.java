@@ -66,8 +66,6 @@ public class StudentController {
     @PostMapping("student")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> addPersonalInfo(@Valid @RequestBody PersonalInfoForm personalInfoForm) {
-        logger.info("personalInfoForm: {}", personalInfoForm);
-        System.out.println("personalInfoForm: " + personalInfoForm);
         return ResponseEntity.ok(studentService.addPersonalInfo(personalInfoForm));
     }
 
