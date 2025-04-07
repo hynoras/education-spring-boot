@@ -4,11 +4,10 @@ import com.example.education_spring_boot.enums.GenderEnum;
 import com.example.education_spring_boot.model.entity.Account;
 import com.example.education_spring_boot.model.entity.Location;
 import com.example.education_spring_boot.model.entity.Major;
-import com.example.education_spring_boot.util.JSONUtil.StudentDeserializer;
+import com.example.education_spring_boot.util.JSONUtil.LocationDeserializer;
+import com.example.education_spring_boot.util.JSONUtil.MajorDeserializer;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
@@ -33,8 +32,10 @@ public class PersonalInfoForm {
     private String religion;
     private String citizen_id;
     private String avatar;
+    @JsonDeserialize(using = LocationDeserializer.class)
+    @JsonProperty("province")
     private Location province;
-    @JsonDeserialize(using = StudentDeserializer.class)
+    @JsonDeserialize(using = MajorDeserializer.class)
     @JsonProperty("major")
     private Major major;
 }

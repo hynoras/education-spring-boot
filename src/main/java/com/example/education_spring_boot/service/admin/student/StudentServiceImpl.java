@@ -15,6 +15,7 @@ import com.example.education_spring_boot.repository.StudentParentRepo;
 import com.example.education_spring_boot.repository.StudentRepo;
 import com.example.education_spring_boot.service.interfaces.StudentService;
 import com.example.education_spring_boot.specs.StudentSpecification;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
@@ -31,10 +32,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -43,20 +41,24 @@ public class StudentServiceImpl implements StudentService {
     private final StudentSpecification studentSpecification;
     private final JdbcTemplate jdbcTemplate;
     private final Cloudinary cloudinary;
+    private final ModelMapper modelMapper;
+    private static final String UNKNOWN_VALUE = "Unknown";
 
     @Autowired
     public StudentServiceImpl(
-        StudentRepo studentRepo,
-        StudentParentRepo studentParentRepo,
-        StudentSpecification studentSpecification,
-        JdbcTemplate jdbcTemplate,
-        Cloudinary cloudinary
+            StudentRepo studentRepo,
+            StudentParentRepo studentParentRepo,
+            StudentSpecification studentSpecification,
+            JdbcTemplate jdbcTemplate,
+            Cloudinary cloudinary,
+            ModelMapper modelMapper
     ) {
         this.studentRepo = studentRepo;
         this.studentParentRepo = studentParentRepo;
         this.studentSpecification = studentSpecification;
         this.jdbcTemplate = jdbcTemplate;
         this.cloudinary = cloudinary;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -120,20 +122,17 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public String addPersonalInfo(PersonalInfoForm personalInfoForm) {
-        Student student = new Student();
-        student.setIdentity(personalInfoForm.getIdentity());
-        student.setAccount(personalInfoForm.getAccount());
-        student.setFullName(personalInfoForm.getFull_name());
-        student.setBirthDate(personalInfoForm.getDate_of_birth());
-        student.setGender(personalInfoForm.getGender());
-        student.setPermanentAddress(Optional.ofNullable(personalInfoForm.getPermanent_address()).orElse("Unknown"));
-        student.setTemporaryAddress(personalInfoForm.getTemporary_address());
-        student.setEthnicGroup(Optional.ofNullable(personalInfoForm.getEthnic_group()).orElse("Unknown"));
-        student.setReligion(personalInfoForm.getReligion());
-        student.setCitizenId(Optional.ofNullable(personalInfoForm.getCitizen_id()).orElse("Unknown"));
-        student.setAvatar(personalInfoForm.getAvatar());
-        student.setProvince(personalInfoForm.getProvince());
-        student.setMajor(personalInfoForm.getMajor());
+        modelMapper.typeMap(PersonalInfoForm.class, Student.class).setPostConverter(ctx -> {
+            Student studentCtx = ctx.getDestination();
+            PersonalInfoForm form = ctx.getSource();
+
+            studentCtx.setPermanentAddress(Optional.ofNullable(form.getPermanent_address()).orElse(UNKNOWN_VALUE));
+            studentCtx.setEthnicGroup(Optional.ofNullable(form.getEthnic_group()).orElse(UNKNOWN_VALUE));
+            studentCtx.setCitizenId(Optional.ofNullable(form.getCitizen_id()).orElse(UNKNOWN_VALUE));
+
+            return studentCtx;
+        });
+        Student student = modelMapper.map(personalInfoForm, Student.class);
         studentRepo.save(student);
         return "Add student personal info successfully";
     }

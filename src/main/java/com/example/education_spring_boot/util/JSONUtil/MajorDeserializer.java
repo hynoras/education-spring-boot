@@ -9,18 +9,16 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.IntNode;
-import com.fasterxml.jackson.databind.node.LongNode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Optional;
 
 @Component
-public class StudentDeserializer extends StdDeserializer<Major> {
+public class MajorDeserializer extends StdDeserializer<Major> {
     private final MajorRepo majorRepo;
 
-    public StudentDeserializer(MajorRepo majorRepo) {
+    public MajorDeserializer(MajorRepo majorRepo) {
         super(Major.class);
         this.majorRepo = majorRepo;
     }
@@ -31,7 +29,7 @@ public class StudentDeserializer extends StdDeserializer<Major> {
         int majorId = ((IntNode) node).intValue();
         Optional<Major> major = majorRepo.findById((long) majorId);
         if (major.isEmpty()) {
-            throw new ResourceNotFoundException("Major with " + majorId + " can not be found!");
+            throw new ResourceNotFoundException("Major with id " + majorId + " can not be found!");
         }
         return major.get();
     }
