@@ -9,13 +9,14 @@ import com.example.education_spring_boot.model.dto.student.detail.PersonalInfo;
 import com.example.education_spring_boot.model.dto.student.detail.PersonalInfoForm;
 import com.example.education_spring_boot.model.dto.student.detail.StudentDetail;
 import com.example.education_spring_boot.model.dto.student.list.StudentList;
-import com.example.education_spring_boot.model.entity.Location;
 import com.example.education_spring_boot.model.entity.Student;
 import com.example.education_spring_boot.repository.StudentParentRepo;
 import com.example.education_spring_boot.repository.StudentRepo;
 import com.example.education_spring_boot.service.interfaces.StudentService;
 import com.example.education_spring_boot.specs.StudentSpecification;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
@@ -42,7 +43,7 @@ public class StudentServiceImpl implements StudentService {
     private final JdbcTemplate jdbcTemplate;
     private final Cloudinary cloudinary;
     private final ModelMapper modelMapper;
-    private static final String UNKNOWN_VALUE = "Unknown";
+    private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
 
     @Autowired
     public StudentServiceImpl(
@@ -122,16 +123,6 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public String addPersonalInfo(PersonalInfoForm personalInfoForm) {
-        modelMapper.typeMap(PersonalInfoForm.class, Student.class).setPostConverter(ctx -> {
-            Student studentCtx = ctx.getDestination();
-            PersonalInfoForm form = ctx.getSource();
-
-            studentCtx.setPermanentAddress(Optional.ofNullable(form.getPermanent_address()).orElse(UNKNOWN_VALUE));
-            studentCtx.setEthnicGroup(Optional.ofNullable(form.getEthnic_group()).orElse(UNKNOWN_VALUE));
-            studentCtx.setCitizenId(Optional.ofNullable(form.getCitizen_id()).orElse(UNKNOWN_VALUE));
-
-            return studentCtx;
-        });
         Student student = modelMapper.map(personalInfoForm, Student.class);
         studentRepo.save(student);
         return "Add student personal info successfully";

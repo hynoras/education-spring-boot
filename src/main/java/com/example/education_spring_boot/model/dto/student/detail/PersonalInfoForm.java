@@ -21,20 +21,32 @@ import java.time.LocalDate;
 public class PersonalInfoForm {
     @NotEmpty(message = "Student ID must not empty")
     private String identity;
+
     private Account account;
+
     @NotEmpty(message = "Student name must not empty")
     private String full_name;
+
     private LocalDate date_of_birth;
+
     private GenderEnum gender;
+
     private String permanent_address;
+
     private String temporary_address;
+
     private String ethnic_group;
+
     private String religion;
+
     private String citizen_id;
+
     private String avatar;
+
     @JsonDeserialize(using = LocationDeserializer.class)
     @JsonProperty("province")
     private Location province;
+
     @JsonDeserialize(using = MajorDeserializer.class)
     @JsonProperty("major")
     private Major major;

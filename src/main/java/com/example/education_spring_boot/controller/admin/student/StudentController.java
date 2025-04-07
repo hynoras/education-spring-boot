@@ -6,6 +6,8 @@ import com.example.education_spring_boot.model.dto.student.detail.StudentDetail;
 import com.example.education_spring_boot.model.dto.student.list.StudentList;
 import com.example.education_spring_boot.service.admin.student.StudentServiceImpl;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,6 +23,7 @@ import java.util.Map;
 public class StudentController {
 
     private final StudentServiceImpl studentService;
+    private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
 
     @Autowired
     public StudentController(StudentServiceImpl studentService) {
@@ -63,6 +66,8 @@ public class StudentController {
     @PostMapping("student")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<String> addPersonalInfo(@Valid @RequestBody PersonalInfoForm personalInfoForm) {
+        logger.info("personalInfoForm: {}", personalInfoForm);
+        System.out.println("personalInfoForm: " + personalInfoForm);
         return ResponseEntity.ok(studentService.addPersonalInfo(personalInfoForm));
     }
 
