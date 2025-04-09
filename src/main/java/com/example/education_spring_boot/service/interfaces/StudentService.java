@@ -28,4 +28,5 @@ public interface StudentService {
     public DefaultResponse addPersonalInfo(PersonalInfoForm personalInfoForm);
     public DefaultResponse updateStudentDetail(String identity, Map<String, Object> updateColumns);
     public DefaultResponse uploadStudentAvatar(MultipartFile avatar, String identity) throws IOException;
+    public DefaultResponse deleteStudentDetail(String identity);
 }
