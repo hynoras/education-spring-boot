@@ -3,6 +3,7 @@ package com.example.education_spring_boot.service.admin.student;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.education_spring_boot.exception.DatabaseException;
+import com.example.education_spring_boot.model.dto.DefaultResponse;
 import com.example.education_spring_boot.model.dto.PaginatedList;
 import com.example.education_spring_boot.model.dto.student.detail.ParentInfo;
 import com.example.education_spring_boot.model.dto.student.detail.PersonalInfo;
@@ -123,15 +124,19 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public String addPersonalInfo(PersonalInfoForm personalInfoForm) {
-        Student student = modelMapper.map(personalInfoForm, Student.class);
-        studentRepo.save(student);
-        return "Add student personal info successfully";
+    public DefaultResponse addPersonalInfo(PersonalInfoForm personalInfoForm) {
+        try {
+            Student student = modelMapper.map(personalInfoForm, Student.class);
+            studentRepo.save(student);
+            return new DefaultResponse(new Date(), "Add student personal info successfully", "none");
+        } catch (Exception e) {
+            throw new DatabaseException("An error occurred while adding student personal information", e);
+        }
     }
 
     @Override
     @Transactional
-    public String updateStudentDetail(String identity, Map<String, Object> updateColumns) {
+    public DefaultResponse updateStudentDetail(String identity, Map<String, Object> updateColumns) {
         try {
             StringBuilder sql = new StringBuilder("UPDATE student SET ");
             List<Object> params = new ArrayList<>();
@@ -149,7 +154,7 @@ public class StudentServiceImpl implements StudentService {
             sql.append("WHERE identity = ?");
             params.add(identity);
             jdbcTemplate.update(sql.toString(), params.toArray());
-            return "Updated student " + identity + " successfully!";
+            return new DefaultResponse(new Date(), "Updated student " + identity + " successfully!", "none");
         } catch (DataAccessException e) {
             throw new DatabaseException("An error occurred while updating student personal information", e);
         }
@@ -157,7 +162,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional
-    public String uploadStudentAvatar(MultipartFile avatar, String identity) throws IOException {
+    public DefaultResponse uploadStudentAvatar(MultipartFile avatar, String identity) throws IOException {
         try {
             Map result = cloudinary.uploader().upload(avatar.getBytes(),
                 ObjectUtils.asMap(
@@ -167,7 +172,7 @@ public class StudentServiceImpl implements StudentService {
                 ));
             String avatarURL = (String) result.get("url");
             jdbcTemplate.update("UPDATE student SET avatar = ? WHERE identity = ?", avatarURL, identity);
-            return "Inserted student " + identity + " avatar successfully!";
+            return new DefaultResponse(new Date(), "Inserted student " + identity + " avatar successfully!", "none");
         } catch (DataAccessException e) {
             throw new DatabaseException("An error occurred when uploading avatar", e);
         }

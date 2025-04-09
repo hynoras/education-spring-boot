@@ -9,7 +9,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Error {
+public class DefaultResponse {
     private Date timestamp;
     private String message;
     private String detail;
