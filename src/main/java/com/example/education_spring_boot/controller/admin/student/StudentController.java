@@ -67,6 +67,12 @@ public class StudentController {
         return ResponseEntity.ok(studentService.addPersonalInfo(personalInfoForm));
     }
 
+    @DeleteMapping("student/{identity}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<DefaultResponse> deletePersonalInfo(@PathVariable("identity") String identity) {
+        return ResponseEntity.ok(studentService.deleteStudentDetail(identity));
+    }
+
     @PutMapping("student/{identity}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<DefaultResponse> updateStudentDetail(
