@@ -1,5 +1,6 @@
 package com.example.education_spring_boot.controller.admin.student;
 
+import com.example.education_spring_boot.model.dto.DefaultResponse;
 import com.example.education_spring_boot.model.dto.PaginatedList;
 import com.example.education_spring_boot.model.dto.student.detail.PersonalInfoForm;
 import com.example.education_spring_boot.model.dto.student.detail.StudentDetail;
@@ -42,46 +43,42 @@ public class StudentController {
         @RequestParam(name = "department", required = false) List<String> department,
         @RequestParam(name = "search", required = false, defaultValue = "") String search
     ) {
-
-        PaginatedList<StudentList> response = studentService.getAllStudent(
-            currentPage,
-            pageSize,
-            sortBy,
-            sortOrder,
-            gender,
-            major,
-            department,
-            search
-        );
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(studentService.getAllStudent(
+                currentPage,
+                pageSize,
+                sortBy,
+                sortOrder,
+                gender,
+                major,
+                department,
+                search
+        ));
     }
 
     @GetMapping("/student/{identity}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<StudentDetail> getStudentDetail(@PathVariable("identity") String identity) {
-        StudentDetail response = studentService.getStudentDetail(identity);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(studentService.getStudentDetail(identity));
     }
 
     @PostMapping("student")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> addPersonalInfo(@Valid @RequestBody PersonalInfoForm personalInfoForm) {
+    public ResponseEntity<DefaultResponse> addPersonalInfo(@Valid @RequestBody PersonalInfoForm personalInfoForm) {
         return ResponseEntity.ok(studentService.addPersonalInfo(personalInfoForm));
     }
 
     @PutMapping("student/{identity}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> updateStudentDetail(
+    public ResponseEntity<DefaultResponse> updateStudentDetail(
         @PathVariable("identity") String identity,
         @RequestBody Map<String, Object> request
     ) {
-        String response = studentService.updateStudentDetail(identity, request);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(studentService.updateStudentDetail(identity, request));
     }
 
     @PostMapping("student/avatar/{identity}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<String> uploadImage(
+    public ResponseEntity<DefaultResponse> uploadImage(
         @RequestParam("avatar") MultipartFile avatar,
         @PathVariable("identity") String identity
     ) throws IOException {
