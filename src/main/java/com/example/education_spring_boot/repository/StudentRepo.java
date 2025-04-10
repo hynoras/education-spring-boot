@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface StudentRepo extends JpaRepository<Student, Long>, JpaSpecificationExecutor<Student> {
+public interface StudentRepo extends JpaRepository<Student, String>, JpaSpecificationExecutor<Student> {
     @EntityGraph(attributePaths = {"major", "major.department"})
     Page<Student> findAll(Specification<Student> spec, Pageable pageable);
 

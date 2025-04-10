@@ -1,11 +1,49 @@
 package com.example.education_spring_boot.controller.admin.student;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.example.education_spring_boot.model.dto.DefaultResponse;
+import com.example.education_spring_boot.model.dto.student_parent.ParentInfoForm;
+import com.example.education_spring_boot.service.admin.student.StudentParentServiceImpl;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
+import static com.example.education_spring_boot.constants.AuthConstants.ADMIN_PREAUTHORIZE;
 import static com.example.education_spring_boot.constants.ControllerMappings.ADMIN_API_PREFIX;
 
 @RestController
 @RequestMapping(ADMIN_API_PREFIX)
 public class StudentParentController {
+    public final StudentParentServiceImpl studentParentService;
+
+    @Autowired
+    public StudentParentController(StudentParentServiceImpl studentParentService) {
+        this.studentParentService = studentParentService;
+    }
+
+    @PostMapping("parent")
+    @PreAuthorize(ADMIN_PREAUTHORIZE)
+    public ResponseEntity<DefaultResponse> addParentInfo(@RequestBody @Valid List<ParentInfoForm> parentInfoForm) {
+        return ResponseEntity.ok(studentParentService.addParentInfo(parentInfoForm));
+    }
+
+    @PutMapping("parent/{student_id}/{relationship}")
+    @PreAuthorize(ADMIN_PREAUTHORIZE)
+    public ResponseEntity<DefaultResponse> updateParentInfo(
+        @PathVariable("student_id") String student_id,
+        @PathVariable("relationship") String relationship,
+        @RequestBody Map<String, Object> updateColumns
+    ) {
+        return ResponseEntity.ok(studentParentService.updateParentInfo(student_id, relationship, updateColumns));
+    }
+
+    @DeleteMapping("parent/{student_id}")
+    @PreAuthorize(ADMIN_PREAUTHORIZE)
+    public ResponseEntity<DefaultResponse> deleteParentInfo(@PathVariable("student_id") String student_id) {
+        return ResponseEntity.ok(studentParentService.deleteParentInfo(student_id));
+    }
 }

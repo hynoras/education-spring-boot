@@ -136,7 +136,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public DefaultResponse deleteStudentDetail(String identity) {
-        studentRepo.deleteById(Long.valueOf(identity));
+        studentRepo.deleteById(identity);
         return new DefaultResponse(new Date(), "Delete student with ID " + identity + " successfully", "none");
     }
 
