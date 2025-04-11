@@ -8,7 +8,7 @@ spring:
 
   docker:
     compose:
-      enabled: false
+      enabled: true
 
   datasource:
     url: jdbc:postgresql://db.shigdmqucvwofhgnbhyb.supabase.co:5432/postgres
