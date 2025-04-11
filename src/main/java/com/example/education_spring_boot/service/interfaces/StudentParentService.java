@@ -9,5 +9,5 @@ import java.util.Map;
 public interface StudentParentService {
     public DefaultResponse addParentInfo(List<ParentInfoForm> parentInfoForm);
     public DefaultResponse updateParentInfo(List<Map<String, Object>> updateColumns);
-    public DefaultResponse deleteParentInfo(String student_id);
+    public DefaultResponse deleteParentInfo(List<Map<String, Long>> ids);
 }

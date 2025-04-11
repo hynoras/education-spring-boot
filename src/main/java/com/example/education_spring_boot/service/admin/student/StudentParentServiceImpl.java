@@ -1,6 +1,5 @@
 package com.example.education_spring_boot.service.admin.student;
 
-import com.example.education_spring_boot.controller.admin.student.StudentController;
 import com.example.education_spring_boot.exception.DatabaseException;
 import com.example.education_spring_boot.model.dto.DefaultResponse;
 import com.example.education_spring_boot.model.dto.student_parent.ParentInfoForm;
@@ -79,8 +78,14 @@ public class StudentParentServiceImpl implements StudentParentService {
     }
 
     @Override
-    public DefaultResponse deleteParentInfo(String student_id) {
-        studentParentRepo.deleteById(Long.valueOf(student_id));
-        return new DefaultResponse(new Date(), "Deleted parent info successfully", "none");
+    public DefaultResponse deleteParentInfo(List<Map<String, Long>> ids) {
+        try {
+            ids.forEach(id -> {
+                studentParentRepo.deleteById(id.get("id"));
+            });
+            return new DefaultResponse(new Date(), "Deleted parent info successfully", "none");
+        } catch (DataAccessException e) {
+            throw new DatabaseException("An error occurred while updating student personal information", e);
+        }
     }
 }

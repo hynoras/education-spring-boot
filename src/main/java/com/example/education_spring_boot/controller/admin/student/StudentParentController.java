@@ -37,9 +37,9 @@ public class StudentParentController {
         return ResponseEntity.ok(studentParentService.updateParentInfo(updateColumns));
     }
 
-    @DeleteMapping("parent/{student_id}")
+    @DeleteMapping("parent")
     @PreAuthorize(ADMIN_PREAUTHORIZE)
-    public ResponseEntity<DefaultResponse> deleteParentInfo(@PathVariable("student_id") String student_id) {
-        return ResponseEntity.ok(studentParentService.deleteParentInfo(student_id));
+    public ResponseEntity<DefaultResponse> deleteParentInfo(@RequestBody List<Map<String, Long>> ids) {
+        return ResponseEntity.ok(studentParentService.deleteParentInfo(ids));
     }
 }
