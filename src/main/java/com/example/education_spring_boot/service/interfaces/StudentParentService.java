@@ -8,6 +8,6 @@ import java.util.Map;
 
 public interface StudentParentService {
     public DefaultResponse addParentInfo(List<ParentInfoForm> parentInfoForm);
-    public DefaultResponse updateParentInfo(String student_id, String relationship, Map<String, Object> updateColumns);
+    public DefaultResponse updateParentInfo(List<Map<String, Object>> updateColumns);
     public DefaultResponse deleteParentInfo(String student_id);
 }

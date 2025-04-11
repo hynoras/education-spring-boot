@@ -31,14 +31,10 @@ public class StudentParentController {
         return ResponseEntity.ok(studentParentService.addParentInfo(parentInfoForm));
     }
 
-    @PutMapping("parent/{student_id}/{relationship}")
+    @PutMapping("parent")
     @PreAuthorize(ADMIN_PREAUTHORIZE)
-    public ResponseEntity<DefaultResponse> updateParentInfo(
-        @PathVariable("student_id") String student_id,
-        @PathVariable("relationship") String relationship,
-        @RequestBody Map<String, Object> updateColumns
-    ) {
-        return ResponseEntity.ok(studentParentService.updateParentInfo(student_id, relationship, updateColumns));
+    public ResponseEntity<DefaultResponse> updateParentInfo(@RequestBody List<Map<String, Object>> updateColumns) {
+        return ResponseEntity.ok(studentParentService.updateParentInfo(updateColumns));
     }
 
     @DeleteMapping("parent/{student_id}")
