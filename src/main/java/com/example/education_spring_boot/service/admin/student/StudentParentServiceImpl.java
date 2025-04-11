@@ -6,6 +6,7 @@ import com.example.education_spring_boot.model.dto.student_parent.ParentInfoForm
 import com.example.education_spring_boot.model.entity.StudentParent;
 import com.example.education_spring_boot.repository.StudentParentRepo;
 import com.example.education_spring_boot.service.interfaces.StudentParentService;
+import com.example.education_spring_boot.utils.DateTimeUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -25,16 +26,19 @@ public class StudentParentServiceImpl implements StudentParentService {
     private final StudentParentRepo studentParentRepo;
     private final ModelMapper modelMapper;
     private final JdbcTemplate jdbcTemplate;
+    private final DateTimeUtils dateTimeUtils;
 
     @Autowired
     public StudentParentServiceImpl(
         StudentParentRepo studentParentRepo,
         ModelMapper modelMapper,
-        JdbcTemplate jdbcTemplate
+        JdbcTemplate jdbcTemplate,
+        DateTimeUtils dateTimeUtils
     ) {
         this.studentParentRepo = studentParentRepo;
         this.modelMapper = modelMapper;
         this.jdbcTemplate = jdbcTemplate;
+        this.dateTimeUtils = dateTimeUtils;
     }
 
     @Override
@@ -52,9 +56,7 @@ public class StudentParentServiceImpl implements StudentParentService {
             StringBuilder sql = new StringBuilder("UPDATE student_parent SET ");
             List<Object> params = new ArrayList<>();
             if (updateColumns.containsKey("birth_date")) {
-                LocalDate localDate = Instant.parse(updateColumns.get("birth_date").toString())
-                        .atZone(ZoneId.of("Asia/Bangkok"))
-                        .toLocalDate();
+                LocalDate localDate = dateTimeUtils.changeTimezone(updateColumns.get("birth_date").toString(), "Asia/Bangkok");
                 updateColumns.put("birth_date", localDate);
             }
             updateColumns.forEach((key, value) -> {
