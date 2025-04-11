@@ -8,6 +8,6 @@ RUN gradle clean build -x test
 # Stage 2: Run the app
 FROM openjdk:23-jdk-slim
 WORKDIR /app
-COPY build/libs/*.jar app.jar
+COPY --from=builder /app/build/libs/*.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
