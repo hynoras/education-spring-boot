@@ -1,9 +1,8 @@
 package com.example.education_spring_boot.config.security;
 
 import com.example.education_spring_boot.service.auth.CustomUserDetailService;
-import com.example.education_spring_boot.util.CookieUtil;
-import com.example.education_spring_boot.util.JwtUtil;
-import io.jsonwebtoken.ExpiredJwtException;
+import com.example.education_spring_boot.utils.CookieUtils;
+import com.example.education_spring_boot.utils.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -17,19 +16,17 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Optional;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     int EXPIRATION_TIME = 0;
-    private final JwtUtil jwtUtil;
+    private final JwtUtils jwtUtils;
     private final CustomUserDetailService customUserDetailService;
 
     @Autowired
-    public  JwtAuthFilter(JwtUtil jwtUtil, CustomUserDetailService customUserDetailService, CookieUtil cookieUtil) {
-        this.jwtUtil = jwtUtil;
+    public  JwtAuthFilter(JwtUtils jwtUtils, CustomUserDetailService customUserDetailService, CookieUtils cookieUtils) {
+        this.jwtUtils = jwtUtils;
         this.customUserDetailService = customUserDetailService;
     }
 
@@ -42,13 +39,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            username = jwtUtil.extractUsername(token);
+            username = jwtUtils.extractUsername(token);
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
 
-            if (jwtUtil.validateToken(token, userDetails)) {
+            if (jwtUtils.validateToken(token, userDetails)) {
 
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,

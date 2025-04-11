@@ -1,23 +1,30 @@
 package com.example.education_spring_boot.controller.admin.student;
 
-import com.example.education_spring_boot.dto.PaginatedList;
-import com.example.education_spring_boot.dto.student.detail.PersonalInformation;
-import com.example.education_spring_boot.dto.student.detail.StudentDetail;
-import com.example.education_spring_boot.dto.student.list.StudentList;
-import com.example.education_spring_boot.model.Student;
+import com.example.education_spring_boot.model.dto.DefaultResponse;
+import com.example.education_spring_boot.model.dto.PaginatedList;
+import com.example.education_spring_boot.model.dto.student.detail.PersonalInfoForm;
+import com.example.education_spring_boot.model.dto.student.detail.StudentDetail;
+import com.example.education_spring_boot.model.dto.student.list.StudentList;
 import com.example.education_spring_boot.service.admin.student.StudentServiceImpl;
+import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("api/admin")
 public class StudentController {
 
     private final StudentServiceImpl studentService;
+    private static final Logger logger = LoggerFactory.getLogger(StudentController.class);
 
     @Autowired
     public StudentController(StudentServiceImpl studentService) {
@@ -27,33 +34,60 @@ public class StudentController {
     @GetMapping("/students")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<PaginatedList<StudentList>> getAllStudent(
-        @RequestParam(defaultValue = "0") Integer currentPage,
-        @RequestParam(defaultValue = "10") Integer pageSize,
-        @RequestParam(defaultValue = "identity") String sortBy,
-        @RequestParam(defaultValue = "desc") String sortOrder,
-        @RequestParam(defaultValue = "", required = false) List<String> gender,
-        @RequestParam(defaultValue = "", required = false) List<String> major,
-        @RequestParam(defaultValue = "", required = false) List<String> department,
-        @RequestParam(defaultValue = "") String search
+        @RequestParam(name = "currentPage", defaultValue = "0") Integer currentPage,
+        @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize,
+        @RequestParam(name = "sortBy", defaultValue = "identity") String sortBy,
+        @RequestParam(name = "sortOrder", defaultValue = "desc") String sortOrder,
+        @RequestParam(name = "gender", required = false) List<String> gender,
+        @RequestParam(name = "major", required = false) List<String> major,
+        @RequestParam(name = "department", required = false) List<String> department,
+        @RequestParam(name = "search", required = false, defaultValue = "") String search
     ) {
-        PaginatedList<StudentList> response = studentService.getAllStudent(
-            currentPage,
-            pageSize,
-            sortBy,
-            sortOrder,
-            gender,
-            major,
-            department,
-            search
-        );
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(studentService.getAllStudent(
+                currentPage,
+                pageSize,
+                sortBy,
+                sortOrder,
+                gender,
+                major,
+                department,
+                search
+        ));
     }
 
-    @GetMapping("/students/{identity}")
+    @GetMapping("/student/{identity}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<StudentDetail> getStudentDetail(@PathVariable("identity") String identity) {
-        StudentDetail response = studentService.getStudentDetail(identity);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(studentService.getStudentDetail(identity));
     }
 
+    @PostMapping("student")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<DefaultResponse> addPersonalInfo(@Valid @RequestBody PersonalInfoForm personalInfoForm) {
+        return ResponseEntity.ok(studentService.addPersonalInfo(personalInfoForm));
+    }
+
+    @DeleteMapping("student/{identity}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<DefaultResponse> deletePersonalInfo(@PathVariable("identity") String identity) {
+        return ResponseEntity.ok(studentService.deleteStudentDetail(identity));
+    }
+
+    @PutMapping("student/{identity}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<DefaultResponse> updateStudentDetail(
+        @PathVariable("identity") String identity,
+        @RequestBody Map<String, Object> request
+    ) {
+        return ResponseEntity.ok(studentService.updateStudentDetail(identity, request));
+    }
+
+    @PostMapping("student/avatar/{identity}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<DefaultResponse> uploadImage(
+        @RequestParam("avatar") MultipartFile avatar,
+        @PathVariable("identity") String identity
+    ) throws IOException {
+        return ResponseEntity.ok(studentService.uploadStudentAvatar(avatar, identity));
+    }
 }
