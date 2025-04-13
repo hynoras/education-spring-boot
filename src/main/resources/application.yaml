@@ -14,7 +14,7 @@ spring:
     url: jdbc:postgresql://db.shigdmqucvwofhgnbhyb.supabase.co:5432/postgres?sslmode=require
     username: postgres
     password: 8QMzd9Zcqk*d8mt
-    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
+    driver-class-name: org.postgresql.Driver
     hikari:
       maximum-pool-size: 10
       minimum-idle: 5
