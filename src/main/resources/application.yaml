@@ -52,3 +52,6 @@ logging:
       springframework:
         core:
           env: DEBUG
+
+server:
+  port: 8000
