@@ -24,8 +24,10 @@ public class EducationSpringBootApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		System.out.println("DB URL: " + dbUrl);
-		System.out.println("DB USER: " + dbUser);
-		System.out.println("DB PASSWORD: " + dbPassword);
+		System.getenv().forEach((key, value) -> {
+			if (key.toLowerCase().contains("spring")) {
+				System.out.println(key + " = " + value);
+			}
+		});
 	}
 }
