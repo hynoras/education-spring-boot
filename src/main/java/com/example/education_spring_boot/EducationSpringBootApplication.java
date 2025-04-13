@@ -24,9 +24,9 @@ public class EducationSpringBootApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		System.getenv().forEach((key, value) -> {
-			if (key.toLowerCase().contains("spring")) {
-				System.out.println(key + " = " + value);
+		System.getenv().forEach((key, val) -> {
+			if (key.toLowerCase().contains("spring") || key.toLowerCase().contains("db")) {
+				System.out.println("ENV: " + key + " = " + val);
 			}
 		});
 	}
