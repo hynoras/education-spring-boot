@@ -2,7 +2,7 @@ package com.example.education_spring_boot.service.admin.student;
 
 import com.example.education_spring_boot.exception.DatabaseException;
 import com.example.education_spring_boot.model.dto.DefaultResponse;
-import com.example.education_spring_boot.model.dto.student_parent.ParentInfoForm;
+import com.example.education_spring_boot.model.dto.parent.ParentInfoForm;
 import com.example.education_spring_boot.model.entity.StudentParent;
 import com.example.education_spring_boot.repository.StudentParentRepo;
 import com.example.education_spring_boot.service.interfaces.StudentParentService;
@@ -15,9 +15,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 
 @Service

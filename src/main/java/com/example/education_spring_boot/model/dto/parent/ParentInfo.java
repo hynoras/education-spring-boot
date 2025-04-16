@@ -1,4 +1,4 @@
-package com.example.education_spring_boot.model.dto.student.detail;
+package com.example.education_spring_boot.model.dto.parent;
 
 import com.example.education_spring_boot.enums.ParentRelationshipEnum;
 import lombok.*;
@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Builder
 public class ParentInfo {
+    private Long id;
     private String full_name;
     private LocalDate date_of_birth;
     private String nationality;

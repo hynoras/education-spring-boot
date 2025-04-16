@@ -1,7 +1,7 @@
 package com.example.education_spring_boot.controller.admin.student;
 
 import com.example.education_spring_boot.model.dto.DefaultResponse;
-import com.example.education_spring_boot.model.dto.student_parent.ParentInfoForm;
+import com.example.education_spring_boot.model.dto.parent.ParentInfoForm;
 import com.example.education_spring_boot.service.admin.student.StudentParentServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

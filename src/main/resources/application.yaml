@@ -40,7 +40,7 @@ cloudinary:
 
 logging:
   level:
-    root: DEBUG
+    root: INFO
     com.example: DEBUG
     org:
       hibernate:

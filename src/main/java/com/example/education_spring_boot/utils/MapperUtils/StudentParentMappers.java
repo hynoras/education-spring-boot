@@ -1,6 +1,6 @@
 package com.example.education_spring_boot.utils.MapperUtils;
 
-import com.example.education_spring_boot.model.dto.student_parent.ParentInfoForm;
+import com.example.education_spring_boot.model.dto.parent.ParentInfoForm;
 import com.example.education_spring_boot.model.entity.StudentParent;
 import jakarta.annotation.PostConstruct;
 import org.modelmapper.ModelMapper;

@@ -1,11 +1,9 @@
-package com.example.education_spring_boot.model.dto.student_parent;
+package com.example.education_spring_boot.model.dto.parent;
 
 import com.example.education_spring_boot.enums.ParentRelationshipEnum;
 import com.example.education_spring_boot.model.entity.Student;
 import com.example.education_spring_boot.utils.JSONUtils.StudentDeserializer;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 

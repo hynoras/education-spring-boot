@@ -1,7 +1,7 @@
 package com.example.education_spring_boot.service.interfaces;
 
 import com.example.education_spring_boot.model.dto.DefaultResponse;
-import com.example.education_spring_boot.model.dto.student_parent.ParentInfoForm;
+import com.example.education_spring_boot.model.dto.parent.ParentInfoForm;
 
 import java.util.List;
 import java.util.Map;
