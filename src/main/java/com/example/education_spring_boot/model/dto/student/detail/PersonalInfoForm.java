@@ -27,7 +27,7 @@ public class PersonalInfoForm {
     @NotEmpty(message = "Student name must not empty")
     private String full_name;
 
-    private LocalDate date_of_birth;
+    private LocalDate birth_date;
 
     private GenderEnum gender;
 

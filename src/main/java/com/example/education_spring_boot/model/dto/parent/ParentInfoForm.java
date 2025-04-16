@@ -23,7 +23,7 @@ public class ParentInfoForm {
     private String full_name;
 
     @NotNull(message = "Parent date of birth must not empty")
-    private LocalDate date_of_birth;
+    private LocalDate birth_date;
 
     @NotNull(message = "Parent nationality must not empty")
     private String nationality;

@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class PersonalInfo {
     private String identity;
     private String full_name;
-    private LocalDate date_of_birth;
+    private LocalDate birth_date;
     private GenderEnum gender;
     private String permanent_address;
     private String temporary_address;

@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class ParentInfo {
     private Long id;
     private String full_name;
-    private LocalDate date_of_birth;
+    private LocalDate birth_date;
     private String nationality;
     private String permanent_address;
     private ParentRelationshipEnum relationship;
