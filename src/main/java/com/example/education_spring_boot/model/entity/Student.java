@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -62,5 +63,8 @@ public class Student {
     @ManyToOne
     @JoinColumn(name = "major_id", referencedColumnName = "majorid")
     private Major major;
+
+    @OneToMany(orphanRemoval = true, cascade = CascadeType.PERSIST, mappedBy = "studentId")
+    private List<StudentParent> parent;
 }
 
