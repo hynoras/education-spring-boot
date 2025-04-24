@@ -3,6 +3,7 @@ package com.example.education_spring_boot.service.interfaces;
 import com.example.education_spring_boot.enums.GenderEnum;
 import com.example.education_spring_boot.model.dto.DefaultResponse;
 import com.example.education_spring_boot.model.dto.PaginatedList;
+import com.example.education_spring_boot.model.dto.student.detail.IdentityMap;
 import com.example.education_spring_boot.model.dto.student.detail.PersonalInfoForm;
 import com.example.education_spring_boot.model.dto.student.detail.StudentDetail;
 import com.example.education_spring_boot.model.dto.student.list.StudentList;
@@ -29,4 +30,5 @@ public interface StudentService {
     public DefaultResponse updateStudentPersonalInfo(String identity, Map<String, Object> updateColumns);
     public DefaultResponse updateStudentAvatar(MultipartFile avatar, String identity) throws IOException;
     public DefaultResponse deleteStudentPersonalInfo(String identity);
+    public DefaultResponse deleteManyStudentPersonalInfo(List<IdentityMap> identities);
 }

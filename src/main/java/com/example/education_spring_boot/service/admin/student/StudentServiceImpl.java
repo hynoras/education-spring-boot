@@ -6,6 +6,7 @@ import com.example.education_spring_boot.exception.DatabaseException;
 import com.example.education_spring_boot.model.dto.DefaultResponse;
 import com.example.education_spring_boot.model.dto.PaginatedList;
 import com.example.education_spring_boot.model.dto.parent.ParentInfo;
+import com.example.education_spring_boot.model.dto.student.detail.IdentityMap;
 import com.example.education_spring_boot.model.dto.student.detail.PersonalInfo;
 import com.example.education_spring_boot.model.dto.student.detail.PersonalInfoForm;
 import com.example.education_spring_boot.model.dto.student.detail.StudentDetail;
@@ -35,6 +36,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -137,6 +139,20 @@ public class StudentServiceImpl implements StudentService {
     public DefaultResponse deleteStudentPersonalInfo(String identity) {
         studentRepo.deleteById(identity);
         return new DefaultResponse(new Date(), "Delete student with ID " + identity + " successfully", "none");
+    }
+
+    @Override
+    public DefaultResponse deleteManyStudentPersonalInfo(List<IdentityMap> identities) {
+        try {
+            AtomicInteger count = new AtomicInteger();
+            identities.forEach(identityMap -> {
+                studentRepo.deleteById(identityMap.getIdentity());
+                count.getAndIncrement();
+            });
+            return new DefaultResponse(new Date(), "Delete " + count + " student successfully!", "none");
+        } catch (DataAccessException e) {
+            throw new DatabaseException("An error occurred while deleting student personal information", e);
+        }
     }
 
     @Override

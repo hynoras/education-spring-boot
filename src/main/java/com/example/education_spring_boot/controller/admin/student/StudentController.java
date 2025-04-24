@@ -2,6 +2,7 @@ package com.example.education_spring_boot.controller.admin.student;
 
 import com.example.education_spring_boot.model.dto.DefaultResponse;
 import com.example.education_spring_boot.model.dto.PaginatedList;
+import com.example.education_spring_boot.model.dto.student.detail.IdentityMap;
 import com.example.education_spring_boot.model.dto.student.detail.PersonalInfoForm;
 import com.example.education_spring_boot.model.dto.student.detail.StudentDetail;
 import com.example.education_spring_boot.model.dto.student.list.StudentList;
@@ -71,6 +72,12 @@ public class StudentController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<DefaultResponse> deleteStudentPersonalInfo(@PathVariable("identity") String identity) {
         return ResponseEntity.ok(studentService.deleteStudentPersonalInfo(identity));
+    }
+
+    @DeleteMapping("students")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<DefaultResponse> deleteManyStudentPersonalInfo(@RequestBody List<IdentityMap> identities) {
+        return ResponseEntity.ok(studentService.deleteManyStudentPersonalInfo(identities));
     }
 
     @PutMapping("student/{identity}")
