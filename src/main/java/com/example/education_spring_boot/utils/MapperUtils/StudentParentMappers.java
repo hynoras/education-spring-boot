@@ -33,7 +33,7 @@ public class StudentParentMappers {
         }).addMappings(mapper -> {
             mapper.map(ParentInfoForm::getStudent_id, StudentParent::setStudentId);
             mapper.map(ParentInfoForm::getFull_name, StudentParent::setFullName);
-            mapper.map(ParentInfoForm::getDate_of_birth, StudentParent::setBirthDate);
+            mapper.map(ParentInfoForm::getBirth_date, StudentParent::setBirthDate);
             mapper.map(ParentInfoForm::getPermanent_address, StudentParent::setPermanentAddress);
         });
     }

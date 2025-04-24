@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,7 +31,7 @@ class StudentServiceTest {
         studentPersonalInformation = PersonalInfo.builder()
             .identity("2052100")
             .full_name("Quang")
-            .date_of_birth(LocalDate.now())
+            .birth_date(LocalDate.now())
             .gender(GenderEnum.valueOf("Male"))
             .permanent_address("permanent address sample")
             .temporary_address("temp address sample")
@@ -46,8 +45,8 @@ class StudentServiceTest {
     @DisplayName("Delete student personal information based on identity")
     void deleteStudentInfo_ifStudentIdentityIsFound() {
         String identity = "21521000";
-        studentService.deleteStudentDetail(identity);
-        verify(studentRepo).deleteById(Long.valueOf(identity));
+        studentService.deleteStudentPersonalInfo(identity);
+        verify(studentRepo).deleteById(identity);
         System.out.println("Test ran successfully");
     }
 

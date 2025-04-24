@@ -123,7 +123,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public DefaultResponse addPersonalInfo(PersonalInfoForm personalInfoForm) {
+    public DefaultResponse addStudentPersonalInfo(PersonalInfoForm personalInfoForm) {
         try {
             Student student = modelMapper.map(personalInfoForm, Student.class);
             studentRepo.save(student);
@@ -134,14 +134,14 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public DefaultResponse deleteStudentDetail(String identity) {
+    public DefaultResponse deleteStudentPersonalInfo(String identity) {
         studentRepo.deleteById(identity);
         return new DefaultResponse(new Date(), "Delete student with ID " + identity + " successfully", "none");
     }
 
     @Override
     @Transactional
-    public DefaultResponse updateStudentDetail(String identity, Map<String, Object> updateColumns) {
+    public DefaultResponse updateStudentPersonalInfo(String identity, Map<String, Object> updateColumns) {
         try {
             StringBuilder sql = new StringBuilder("UPDATE student SET ");
             List<Object> params = new ArrayList<>();
@@ -167,7 +167,7 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     @Transactional
-    public DefaultResponse uploadStudentAvatar(MultipartFile avatar, String identity) throws IOException {
+    public DefaultResponse updateStudentAvatar(MultipartFile avatar, String identity) throws IOException {
         try {
             Map result = cloudinary.uploader().upload(avatar.getBytes(),
                 ObjectUtils.asMap(
@@ -177,7 +177,7 @@ public class StudentServiceImpl implements StudentService {
                 ));
             String avatarURL = (String) result.get("url");
             jdbcTemplate.update("UPDATE student SET avatar = ? WHERE identity = ?", avatarURL, identity);
-            return new DefaultResponse(new Date(), "Inserted student " + identity + " avatar successfully!", "none");
+            return new DefaultResponse(new Date(), "Updated student " + identity + " avatar successfully!", "none");
         } catch (DataAccessException e) {
             throw new DatabaseException("An error occurred when uploading avatar", e);
         }

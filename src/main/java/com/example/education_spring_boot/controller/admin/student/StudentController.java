@@ -63,31 +63,31 @@ public class StudentController {
 
     @PostMapping("student")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<DefaultResponse> addPersonalInfo(@Valid @RequestBody PersonalInfoForm personalInfoForm) {
-        return ResponseEntity.ok(studentService.addPersonalInfo(personalInfoForm));
+    public ResponseEntity<DefaultResponse> addStudentPersonalInfo(@Valid @RequestBody PersonalInfoForm personalInfoForm) {
+        return ResponseEntity.ok(studentService.addStudentPersonalInfo(personalInfoForm));
     }
 
     @DeleteMapping("student/{identity}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<DefaultResponse> deletePersonalInfo(@PathVariable("identity") String identity) {
-        return ResponseEntity.ok(studentService.deleteStudentDetail(identity));
+    public ResponseEntity<DefaultResponse> deleteStudentPersonalInfo(@PathVariable("identity") String identity) {
+        return ResponseEntity.ok(studentService.deleteStudentPersonalInfo(identity));
     }
 
     @PutMapping("student/{identity}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<DefaultResponse> updateStudentDetail(
+    public ResponseEntity<DefaultResponse> updateStudentPersonalInfo(
         @PathVariable("identity") String identity,
         @RequestBody Map<String, Object> request
     ) {
-        return ResponseEntity.ok(studentService.updateStudentDetail(identity, request));
+        return ResponseEntity.ok(studentService.updateStudentPersonalInfo(identity, request));
     }
 
-    @PostMapping("student/avatar/{identity}")
+    @PutMapping("student/avatar/{identity}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<DefaultResponse> uploadImage(
+    public ResponseEntity<DefaultResponse> updateStudentAvatar(
         @RequestParam("avatar") MultipartFile avatar,
         @PathVariable("identity") String identity
     ) throws IOException {
-        return ResponseEntity.ok(studentService.uploadStudentAvatar(avatar, identity));
+        return ResponseEntity.ok(studentService.updateStudentAvatar(avatar, identity));
     }
 }
