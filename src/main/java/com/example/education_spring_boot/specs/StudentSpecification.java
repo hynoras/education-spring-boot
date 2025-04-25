@@ -1,7 +1,7 @@
 package com.example.education_spring_boot.specs;
 
-import com.example.education_spring_boot.model.Major;
-import com.example.education_spring_boot.model.Student;
+import com.example.education_spring_boot.model.entity.Major;
+import com.example.education_spring_boot.model.entity.Student;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.JoinType;
 import org.springframework.data.jpa.domain.Specification;

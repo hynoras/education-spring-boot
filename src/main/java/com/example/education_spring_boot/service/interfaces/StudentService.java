@@ -1,13 +1,18 @@
 package com.example.education_spring_boot.service.interfaces;
 
-import com.example.education_spring_boot.dto.PaginatedList;
-import com.example.education_spring_boot.dto.student.detail.ParentInformation;
-import com.example.education_spring_boot.dto.student.detail.PersonalInformation;
-import com.example.education_spring_boot.dto.student.detail.StudentDetail;
-import com.example.education_spring_boot.dto.student.list.StudentList;
-import com.example.education_spring_boot.model.Student;
+import com.example.education_spring_boot.enums.GenderEnum;
+import com.example.education_spring_boot.model.dto.DefaultResponse;
+import com.example.education_spring_boot.model.dto.PaginatedList;
+import com.example.education_spring_boot.model.dto.student.detail.IdentityMap;
+import com.example.education_spring_boot.model.dto.student.detail.PersonalInfoForm;
+import com.example.education_spring_boot.model.dto.student.detail.StudentDetail;
+import com.example.education_spring_boot.model.dto.student.list.StudentList;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 public interface StudentService {
     public PaginatedList<StudentList> getAllStudent(
@@ -21,4 +26,9 @@ public interface StudentService {
         String search
     );
     public StudentDetail getStudentDetail(String identity);
+    public DefaultResponse addStudentPersonalInfo(PersonalInfoForm personalInfoForm);
+    public DefaultResponse updateStudentPersonalInfo(String identity, Map<String, Object> updateColumns);
+    public DefaultResponse updateStudentAvatar(MultipartFile avatar, String identity) throws IOException;
+    public DefaultResponse deleteStudentPersonalInfo(String identity);
+    public DefaultResponse deleteManyStudentPersonalInfo(List<IdentityMap> identities);
 }

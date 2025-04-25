@@ -8,14 +8,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class EducationSpringBootApplication implements CommandLineRunner {
 
-	@Value("${spring.datasource.url}")
-	private String dbUrl;
-
-	@Value("${spring.datasource.username}")
-	private String dbUser;
-
-	@Value("${spring.datasource.password}")
-	private String dbPassword;
+//	@Value("${spring.datasource.url}")
+//	private String dbUrl;
+//
+//	@Value("${spring.datasource.username}")
+//	private String dbUser;
+//
+//	@Value("${spring.datasource.password}")
+//	private String dbPassword;
 
 	public static void main(String[] args) {
 		System.setProperty("spring.devtools.restart.enabled", "true");
@@ -24,8 +24,10 @@ public class EducationSpringBootApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) {
-		System.out.println("DB URL: " + dbUrl);
-		System.out.println("DB USER: " + dbUser);
-		System.out.println("DB PASSWORD: " + dbPassword);
+//		System.getenv().forEach((key, val) -> {
+//			if (key.toLowerCase().contains("spring") || key.toLowerCase().contains("db")) {
+//				System.out.println("ENV: " + key + " = " + val);
+//			}
+//		});
 	}
 }

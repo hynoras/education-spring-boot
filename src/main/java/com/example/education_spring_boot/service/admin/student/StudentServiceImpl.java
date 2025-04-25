@@ -1,37 +1,68 @@
 package com.example.education_spring_boot.service.admin.student;
 
-import com.example.education_spring_boot.dto.PaginatedList;
-import com.example.education_spring_boot.dto.student.detail.ParentInformation;
-import com.example.education_spring_boot.dto.student.detail.PersonalInformation;
-import com.example.education_spring_boot.dto.student.detail.StudentDetail;
-import com.example.education_spring_boot.dto.student.list.StudentList;
-import com.example.education_spring_boot.model.Student;
-import com.example.education_spring_boot.model.StudentParent;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import com.example.education_spring_boot.exception.DatabaseException;
+import com.example.education_spring_boot.model.dto.DefaultResponse;
+import com.example.education_spring_boot.model.dto.PaginatedList;
+import com.example.education_spring_boot.model.dto.parent.ParentInfo;
+import com.example.education_spring_boot.model.dto.student.detail.IdentityMap;
+import com.example.education_spring_boot.model.dto.student.detail.PersonalInfo;
+import com.example.education_spring_boot.model.dto.student.detail.PersonalInfoForm;
+import com.example.education_spring_boot.model.dto.student.detail.StudentDetail;
+import com.example.education_spring_boot.model.dto.student.list.StudentList;
+import com.example.education_spring_boot.model.entity.Student;
 import com.example.education_spring_boot.repository.StudentParentRepo;
 import com.example.education_spring_boot.repository.StudentRepo;
 import com.example.education_spring_boot.service.interfaces.StudentService;
 import com.example.education_spring_boot.specs.StudentSpecification;
+import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import java.io.IOException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class StudentServiceImpl implements StudentService {
     private final StudentRepo studentRepo;
     private final StudentParentRepo studentParentRepo;
     private final StudentSpecification studentSpecification;
+    private final JdbcTemplate jdbcTemplate;
+    private final Cloudinary cloudinary;
+    private final ModelMapper modelMapper;
+    private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
 
     @Autowired
-    public StudentServiceImpl(StudentRepo studentRepo, StudentParentRepo studentParentRepo, StudentSpecification studentSpecification) {
+    public StudentServiceImpl(
+            StudentRepo studentRepo,
+            StudentParentRepo studentParentRepo,
+            StudentSpecification studentSpecification,
+            JdbcTemplate jdbcTemplate,
+            Cloudinary cloudinary,
+            ModelMapper modelMapper
+    ) {
         this.studentRepo = studentRepo;
         this.studentParentRepo = studentParentRepo;
         this.studentSpecification = studentSpecification;
+        this.jdbcTemplate = jdbcTemplate;
+        this.cloudinary = cloudinary;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -74,18 +105,97 @@ public class StudentServiceImpl implements StudentService {
                 pagedResult.getTotalPages(),
                 pagedResult.isLast()
             );
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to fetch student list", e);
+        } catch (DataAccessException e) {
+            throw new DatabaseException("An error occurred while fetching student list", e);
         }
     }
 
     @Override
     public StudentDetail getStudentDetail(String identity) {
-        PersonalInformation personalInformation = studentRepo.findByIdentity(identity);
-        List<ParentInformation> parentInformation = studentParentRepo.findByIdentity(identity);
-        return new StudentDetail(
-            personalInformation,
-            parentInformation
-        );
+        try {
+            PersonalInfo personalInformation = studentRepo.findByIdentity(identity);
+            List<ParentInfo> parentInformation = studentParentRepo.findByIdentity(identity);
+            return new StudentDetail(
+                    personalInformation,
+                    parentInformation
+            );
+        } catch (DataAccessException e) {
+            throw new DatabaseException("An error occurred while fetching student details", e);
+        }
+    }
+
+    @Override
+    public DefaultResponse addStudentPersonalInfo(PersonalInfoForm personalInfoForm) {
+        try {
+            Student student = modelMapper.map(personalInfoForm, Student.class);
+            studentRepo.save(student);
+            return new DefaultResponse(new Date(), "Add student personal info successfully", "none");
+        } catch (Exception e) {
+            throw new DatabaseException("An error occurred while adding student personal information", e);
+        }
+    }
+
+    @Override
+    public DefaultResponse deleteStudentPersonalInfo(String identity) {
+        studentRepo.deleteById(identity);
+        return new DefaultResponse(new Date(), "Delete student with ID " + identity + " successfully", "none");
+    }
+
+    @Override
+    public DefaultResponse deleteManyStudentPersonalInfo(List<IdentityMap> identities) {
+        try {
+            AtomicInteger count = new AtomicInteger();
+            identities.forEach(identityMap -> {
+                studentRepo.deleteById(identityMap.getIdentity());
+                count.getAndIncrement();
+            });
+            return new DefaultResponse(new Date(), "Delete " + count + " student successfully!", "none");
+        } catch (DataAccessException e) {
+            throw new DatabaseException("An error occurred while deleting student personal information", e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public DefaultResponse updateStudentPersonalInfo(String identity, Map<String, Object> updateColumns) {
+        try {
+            StringBuilder sql = new StringBuilder("UPDATE student SET ");
+            List<Object> params = new ArrayList<>();
+            if (updateColumns.containsKey("birth_date")) {
+                LocalDate localDate = Instant.parse(updateColumns.get("birth_date").toString())
+                                                .atZone(ZoneId.of("Asia/Bangkok"))
+                                                .toLocalDate();
+                updateColumns.put("birth_date", localDate);
+            }
+            updateColumns.forEach((key, value) -> {
+                sql.append(key).append(" = ?, ");
+                params.add(value);
+            });
+            sql.delete(sql.length() - 2, sql.length() - 1);
+            sql.append("WHERE identity = ?");
+            params.add(identity);
+            jdbcTemplate.update(sql.toString(), params.toArray());
+            return new DefaultResponse(new Date(), "Updated student " + identity + " successfully!", "none");
+        } catch (DataAccessException e) {
+            throw new DatabaseException("An error occurred while updating student personal information", e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public DefaultResponse updateStudentAvatar(MultipartFile avatar, String identity) throws IOException {
+        try {
+            Map result = cloudinary.uploader().upload(avatar.getBytes(),
+                ObjectUtils.asMap(
+                    "folder", "student-avatar",
+                    "public_id", avatar.getOriginalFilename(),
+                    "unique_filename", "true"
+                ));
+            String avatarURL = (String) result.get("url");
+            jdbcTemplate.update("UPDATE student SET avatar = ? WHERE identity = ?", avatarURL, identity);
+            return new DefaultResponse(new Date(), "Updated student " + identity + " avatar successfully!", "none");
+        } catch (DataAccessException e) {
+            throw new DatabaseException("An error occurred when uploading avatar", e);
+        }
     }
 }
