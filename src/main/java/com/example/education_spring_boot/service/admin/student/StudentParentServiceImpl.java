@@ -96,7 +96,7 @@ public class StudentParentServiceImpl implements StudentParentService {
                 }
             });
             return new DefaultResponse(new Date(), "Upsert parent info successfully", "none");
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             throw new RuntimeException("An error occurred while upserting parent information", e);
         }
     }
