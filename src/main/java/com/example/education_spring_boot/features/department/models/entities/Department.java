@@ -10,11 +10,10 @@ import lombok.*;
 @AllArgsConstructor
 @Table(name = "department")
 public class Department {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer departmentId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer departmentId;
 
-    @Column(unique = true)
-    private String departmentName;
+  @Column(unique = true)
+  private String departmentName;
 }
-

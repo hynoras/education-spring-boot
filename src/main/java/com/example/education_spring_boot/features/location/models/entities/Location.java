@@ -10,12 +10,11 @@ import lombok.*;
 @AllArgsConstructor
 @Table(name = "location")
 public class Location {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer provinceId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer provinceId;
 
-    private String provinceName;
-    private String districtName;
-    private boolean isRemoteArea;
+  private String provinceName;
+  private String districtName;
+  private boolean isRemoteArea;
 }
-

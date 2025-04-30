@@ -10,5 +10,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MajorNameList {
-    private String major_name;
+  private String major_name;
 }

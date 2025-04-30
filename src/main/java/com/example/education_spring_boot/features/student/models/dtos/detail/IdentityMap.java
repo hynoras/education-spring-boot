@@ -7,5 +7,5 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class IdentityMap {
-    private String identity;
+  private String identity;
 }

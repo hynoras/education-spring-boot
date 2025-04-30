@@ -1,6 +1,7 @@
 package com.example.education_spring_boot.features.major.models.entities;
 
 import com.example.education_spring_boot.features.department.models.entities.Department;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,15 +12,14 @@ import lombok.*;
 @AllArgsConstructor
 @Table(name = "major")
 public class Major {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer majorId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer majorId;
 
-    @Column(unique = true)
-    private String majorName;
+  @Column(unique = true)
+  private String majorName;
 
-    @ManyToOne
-    @JoinColumn(name = "department_id", referencedColumnName = "departmentid")
-    private Department department;
+  @ManyToOne
+  @JoinColumn(name = "department_id", referencedColumnName = "departmentid")
+  private Department department;
 }
-

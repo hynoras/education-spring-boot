@@ -10,5 +10,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DepartmentNameList {
-    private String department_name;
+  private String department_name;
 }
