@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface StudentParentService {
-    public DefaultResponse addParentInfo(List<ParentInfoForm> parentInfoForm);
-    public DefaultResponse updateParentInfo(List<Map<String, Object>> updateColumns);
+    public void addParentInfo(Map<String, Object> addColumns);
+    public void updateParentInfo(Map<String, Object> updateColumns);
+    public DefaultResponse upsertParentInfo(List<Map<String, Object>> upsertColumns);
     public DefaultResponse deleteParentInfo(List<Map<String, Long>> ids);
 }

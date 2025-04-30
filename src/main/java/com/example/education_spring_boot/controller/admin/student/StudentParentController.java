@@ -1,7 +1,6 @@
 package com.example.education_spring_boot.controller.admin.student;
 
 import com.example.education_spring_boot.model.dto.DefaultResponse;
-import com.example.education_spring_boot.model.dto.parent.ParentInfoForm;
 import com.example.education_spring_boot.service.admin.student.StudentParentServiceImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +26,8 @@ public class StudentParentController {
 
     @PostMapping("parent")
     @PreAuthorize(ADMIN_PREAUTHORIZE)
-    public ResponseEntity<DefaultResponse> addParentInfo(@RequestBody @Valid List<ParentInfoForm> parentInfoForm) {
-        return ResponseEntity.ok(studentParentService.addParentInfo(parentInfoForm));
-    }
-
-    @PutMapping("parent")
-    @PreAuthorize(ADMIN_PREAUTHORIZE)
-    public ResponseEntity<DefaultResponse> updateParentInfo(@RequestBody List<Map<String, Object>> updateColumns) {
-        return ResponseEntity.ok(studentParentService.updateParentInfo(updateColumns));
+    public ResponseEntity<DefaultResponse> upsertParentInfo(@RequestBody @Valid List<Map<String, Object>> parentInfoForm) {
+        return ResponseEntity.ok(studentParentService.upsertParentInfo(parentInfoForm));
     }
 
     @DeleteMapping("parent")
