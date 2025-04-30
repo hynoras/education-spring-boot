@@ -1,9 +1,9 @@
 package com.example.education_spring_boot.service;
 
-import com.example.education_spring_boot.model.dto.student.detail.PersonalInfo;
-import com.example.education_spring_boot.enums.GenderEnum;
-import com.example.education_spring_boot.repository.StudentRepo;
-import com.example.education_spring_boot.service.admin.student.StudentServiceImpl;
+import com.example.education_spring_boot.features.student.models.dtos.detail.PersonalInfo;
+import com.example.education_spring_boot.shared.enums.GenderEnum;
+import com.example.education_spring_boot.features.student.repositories.StudentRepo;
+import com.example.education_spring_boot.features.student.services.StudentServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
