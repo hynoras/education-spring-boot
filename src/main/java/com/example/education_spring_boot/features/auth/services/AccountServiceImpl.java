@@ -3,7 +3,6 @@ package com.example.education_spring_boot.features.auth.services;
 import java.util.Map;
 import java.util.Optional;
 
-import com.example.education_spring_boot.features.auth.constants.AccountColumns;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.education_spring_boot.features.auth.constants.AccountColumns;
 import com.example.education_spring_boot.features.auth.models.dtos.LoginRequest;
 import com.example.education_spring_boot.features.auth.models.dtos.RegisterRequest;
 import com.example.education_spring_boot.features.auth.models.entities.Account;

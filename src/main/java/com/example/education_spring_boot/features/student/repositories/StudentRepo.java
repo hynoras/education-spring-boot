@@ -1,7 +1,5 @@
 package com.example.education_spring_boot.features.student.repositories;
 
-import com.example.education_spring_boot.features.department.constants.DepartmentTables;
-import com.example.education_spring_boot.features.major.constants.MajorTables;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -9,6 +7,8 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.example.education_spring_boot.features.department.constants.DepartmentTables;
+import com.example.education_spring_boot.features.major.constants.MajorTables;
 import com.example.education_spring_boot.features.student.models.dtos.detail.PersonalInfo;
 import com.example.education_spring_boot.features.student.models.entities.Student;
 

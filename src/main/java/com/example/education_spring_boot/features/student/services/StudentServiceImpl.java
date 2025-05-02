@@ -6,8 +6,6 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.example.education_spring_boot.shared.constants.controller.SortConstants;
-import com.example.education_spring_boot.shared.constants.datetime.DateTimeConstants;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +33,8 @@ import com.example.education_spring_boot.features.student.models.dtos.detail.Stu
 import com.example.education_spring_boot.features.student.models.dtos.list.StudentList;
 import com.example.education_spring_boot.features.student.models.entities.Student;
 import com.example.education_spring_boot.features.student.repositories.StudentRepo;
+import com.example.education_spring_boot.shared.constants.controller.SortConstants;
+import com.example.education_spring_boot.shared.constants.datetime.DateTimeConstants;
 import com.example.education_spring_boot.shared.exception.DatabaseException;
 import com.example.education_spring_boot.shared.model.DefaultResponse;
 import com.example.education_spring_boot.shared.model.PaginatedList;
@@ -78,7 +78,9 @@ public class StudentServiceImpl implements StudentService {
       String search) {
     try {
       Sort.Direction direction =
-          sortOrder.equalsIgnoreCase(SortConstants.ORDER_DESC) ? Sort.Direction.DESC : Sort.Direction.ASC;
+          sortOrder.equalsIgnoreCase(SortConstants.ORDER_DESC)
+              ? Sort.Direction.DESC
+              : Sort.Direction.ASC;
       Pageable paging = PageRequest.of(currentPage, pageSize, Sort.by(direction, sortBy));
       Specification<Student> filters =
           Specification.where(studentSpecification.filterByGender(gender))
