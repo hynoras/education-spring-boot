@@ -1,5 +1,7 @@
 package com.example.education_spring_boot.features.student.repositories;
 
+import com.example.education_spring_boot.features.department.constants.DepartmentTables;
+import com.example.education_spring_boot.features.major.constants.MajorTables;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -13,7 +15,7 @@ import com.example.education_spring_boot.features.student.models.entities.Studen
 @Repository
 public interface StudentRepo
     extends JpaRepository<Student, String>, JpaSpecificationExecutor<Student> {
-  @EntityGraph(attributePaths = {"major", "major.department"})
+  @EntityGraph(attributePaths = {MajorTables.NAME, MajorTables.NAME + "." + DepartmentTables.NAME})
   Page<Student> findAll(Specification<Student> spec, Pageable pageable);
 
   @Query(

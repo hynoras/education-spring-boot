@@ -1,7 +1,5 @@
 package com.example.education_spring_boot.features.parent.utils;
 
-import static com.example.education_spring_boot.shared.constants.GenericValues.UNKNOWN_VALUE;
-
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -9,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.example.education_spring_boot.features.parent.models.dtos.ParentInfoForm;
 import com.example.education_spring_boot.features.parent.models.entities.StudentParent;
+import com.example.education_spring_boot.shared.constants.generic.GenericValues;
 
 import jakarta.annotation.PostConstruct;
 
@@ -33,9 +32,9 @@ public class StudentParentMappers {
               StudentParent parentCtx = ctx.getDestination();
               ParentInfoForm form = ctx.getSource();
               parentCtx.setPermanentAddress(
-                  Optional.ofNullable(form.getPermanent_address()).orElse(UNKNOWN_VALUE));
+                  Optional.ofNullable(form.getPermanent_address()).orElse(GenericValues.UNKNOWN));
               parentCtx.setNationality(
-                  Optional.ofNullable(form.getNationality()).orElse(UNKNOWN_VALUE));
+                  Optional.ofNullable(form.getNationality()).orElse(GenericValues.UNKNOWN));
               return parentCtx;
             })
         .addMappings(

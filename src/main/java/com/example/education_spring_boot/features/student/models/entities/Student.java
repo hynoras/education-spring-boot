@@ -1,10 +1,5 @@
 package com.example.education_spring_boot.features.student.models.entities;
 
-import static com.example.education_spring_boot.features.student.constants.StudentAttributes.*;
-import static com.example.education_spring_boot.shared.constants.DatabaseAttributes.GENDER;
-import static com.example.education_spring_boot.shared.constants.GenericValues.NONE_DB_DEFAULT;
-import static com.example.education_spring_boot.shared.constants.GenericValues.UNKNOWN_DB_DEFAULT;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -14,6 +9,10 @@ import com.example.education_spring_boot.features.auth.models.entities.Account;
 import com.example.education_spring_boot.features.location.models.entities.Location;
 import com.example.education_spring_boot.features.major.models.entities.Major;
 import com.example.education_spring_boot.features.parent.models.entities.StudentParent;
+import com.example.education_spring_boot.features.student.constants.StudentColumns;
+import com.example.education_spring_boot.features.student.constants.StudentTables;
+import com.example.education_spring_boot.shared.constants.database.CommonColumnNames;
+import com.example.education_spring_boot.shared.constants.generic.SqlDefaults;
 import com.example.education_spring_boot.shared.enums.GenderEnum;
 
 import jakarta.persistence.*;
@@ -25,46 +24,46 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = STUDENT_ATTR)
+@Table(name = StudentTables.NAME)
 public class Student {
   @Id
-  @Column(name = IDENTITY_ATTR)
+  @Column(name = StudentColumns.IDENTITY)
   private String identity;
 
   @OneToOne
-  @JoinColumn(name = ACCOUNT_ID_ATTR, unique = true)
+  @JoinColumn(name = StudentColumns.ACCOUNT_ID, unique = true)
   private Account account;
 
-  @Column(name = FULL_NAME_ATTR, nullable = false, unique = true)
+  @Column(name = StudentColumns.FULL_NAME, nullable = false, unique = true)
   private String fullName;
 
-  @Column(name = BIRTH_DATE_ATTR, columnDefinition = "DATE")
+  @Column(name = StudentColumns.BIRTH_DATE, columnDefinition = "DATE")
   private LocalDate birthDate;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = GENDER)
+  @Column(name = CommonColumnNames.GENDER)
   private GenderEnum gender;
 
-  @Column(name = PERMANENT_ADDRESS_ATTR, nullable = false)
-  @ColumnDefault(UNKNOWN_DB_DEFAULT)
+  @Column(name = StudentColumns.PERMANENT_ADDRESS, nullable = false)
+  @ColumnDefault(SqlDefaults.UNKNOWN)
   private String permanentAddress;
 
-  @Column(name = TEMPORARY_ADDRESS_ATTR)
+  @Column(name = StudentColumns.TEMPORARY_ADDRESS)
   private String temporaryAddress;
 
-  @Column(name = ETHNIC_GROUP_ATTR, length = 100, nullable = false)
-  @ColumnDefault(UNKNOWN_DB_DEFAULT)
+  @Column(name = StudentColumns.ETHNIC_GROUP, length = 100, nullable = false)
+  @ColumnDefault(SqlDefaults.UNKNOWN)
   private String ethnicGroup;
 
-  @Column(name = RELIGION_ATTR, length = 100, nullable = true)
-  @ColumnDefault(NONE_DB_DEFAULT)
+  @Column(name = StudentColumns.RELIGION, length = 100, nullable = true)
+  @ColumnDefault(SqlDefaults.NONE)
   private String religion;
 
-  @Column(name = CITIZEN_ID_ATTR, length = 20, nullable = false, unique = true)
-  @ColumnDefault(UNKNOWN_DB_DEFAULT)
+  @Column(name = StudentColumns.CITIZEN_ID, length = 20, nullable = false, unique = true)
+  @ColumnDefault(SqlDefaults.UNKNOWN)
   private String citizenId;
 
-  @Column(name = AVATAR_ATTR)
+  @Column(name = StudentColumns.AVATAR)
   private String avatar;
 
   @ManyToOne

@@ -1,7 +1,7 @@
 package com.example.education_spring_boot.features.parent.controllers;
 
-import static com.example.education_spring_boot.shared.constants.AuthConstants.ADMIN_PREAUTHORIZE;
-import static com.example.education_spring_boot.shared.constants.ControllerMappings.API_PREFIX;
+import static com.example.education_spring_boot.shared.constants.auth.AuthConstants.ADMIN_PREAUTHORIZE;
+import static com.example.education_spring_boot.shared.constants.controller.ControllerMappings.API_PREFIX;
 
 import java.util.List;
 import java.util.Map;

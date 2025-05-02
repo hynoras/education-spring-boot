@@ -3,10 +3,11 @@ package com.example.education_spring_boot.features.student.services;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.example.education_spring_boot.shared.constants.controller.SortConstants;
+import com.example.education_spring_boot.shared.constants.datetime.DateTimeConstants;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.education_spring_boot.features.parent.models.dtos.ParentInfo;
 import com.example.education_spring_boot.features.parent.repositories.StudentParentRepo;
+import com.example.education_spring_boot.features.student.constants.StudentColumns;
 import com.example.education_spring_boot.features.student.models.dtos.detail.IdentityMap;
 import com.example.education_spring_boot.features.student.models.dtos.detail.PersonalInfo;
 import com.example.education_spring_boot.features.student.models.dtos.detail.PersonalInfoForm;
@@ -76,7 +78,7 @@ public class StudentServiceImpl implements StudentService {
       String search) {
     try {
       Sort.Direction direction =
-          sortOrder.equalsIgnoreCase("desc") ? Sort.Direction.DESC : Sort.Direction.ASC;
+          sortOrder.equalsIgnoreCase(SortConstants.ORDER_DESC) ? Sort.Direction.DESC : Sort.Direction.ASC;
       Pageable paging = PageRequest.of(currentPage, pageSize, Sort.by(direction, sortBy));
       Specification<Student> filters =
           Specification.where(studentSpecification.filterByGender(gender))
@@ -88,7 +90,7 @@ public class StudentServiceImpl implements StudentService {
             filters.and(
                 (root, query, builder) ->
                     builder.or(
-                        builder.like(root.get("identity"), "%" + search + "%"),
+                        builder.like(root.get(StudentColumns.IDENTITY), "%" + search + "%"),
                         builder.like(root.get("fullName"), "%" + search + "%")));
       }
       pagedResult = studentRepo.findAll(filters, paging);
@@ -167,7 +169,7 @@ public class StudentServiceImpl implements StudentService {
       if (updateColumns.containsKey("birth_date")) {
         LocalDate localDate =
             Instant.parse(updateColumns.get("birth_date").toString())
-                .atZone(ZoneId.of("Asia/Bangkok"))
+                .atZone(DateTimeConstants.BANGKOK_ZONE)
                 .toLocalDate();
         updateColumns.put("birth_date", localDate);
       }
