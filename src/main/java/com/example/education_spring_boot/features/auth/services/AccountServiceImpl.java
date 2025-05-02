@@ -3,6 +3,7 @@ package com.example.education_spring_boot.features.auth.services;
 import java.util.Map;
 import java.util.Optional;
 
+import com.example.education_spring_boot.features.auth.constants.AccountColumns;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -77,7 +78,7 @@ public class AccountServiceImpl implements AccountService {
       Optional<String> roleOptional =
           authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst();
       String role = roleOptional.orElse("USER");
-      return Map.of("username", authentication.getName(), "role", role);
+      return Map.of(AccountColumns.USERNAME, authentication.getName(), AccountColumns.ROLE, role);
     } catch (DataAccessException e) {
       if (!authentication.isAuthenticated()
           || "anonymousUser".equals(authentication.getPrincipal())) {
