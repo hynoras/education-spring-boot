@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DateTimeUtils {
 
-  public LocalDate changeTimezone(String datetime, String zoneId) {
-    return Instant.parse(datetime).atZone(ZoneId.of(zoneId)).toLocalDate();
+  public LocalDate changeTimezone(String datetime, ZoneId zoneId) {
+    return Instant.parse(datetime).atZone(zoneId).toLocalDate();
   }
 }

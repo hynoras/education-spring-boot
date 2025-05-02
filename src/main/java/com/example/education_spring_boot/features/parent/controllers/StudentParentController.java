@@ -1,8 +1,5 @@
 package com.example.education_spring_boot.features.parent.controllers;
 
-import static com.example.education_spring_boot.shared.constants.auth.AuthConstants.ADMIN_PREAUTHORIZE;
-import static com.example.education_spring_boot.shared.constants.controller.ControllerMappings.API_PREFIX;
-
 import java.util.List;
 import java.util.Map;
 
@@ -11,13 +8,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.education_spring_boot.features.parent.constants.ParentRoutes;
 import com.example.education_spring_boot.features.parent.services.StudentParentServiceImpl;
+import com.example.education_spring_boot.shared.constants.auth.AuthConstants;
+import com.example.education_spring_boot.shared.constants.controller.ControllerMappings;
 import com.example.education_spring_boot.shared.model.DefaultResponse;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping(API_PREFIX)
+@RequestMapping(ControllerMappings.API_PREFIX)
 public class StudentParentController {
   public final StudentParentServiceImpl studentParentService;
 
@@ -26,15 +26,15 @@ public class StudentParentController {
     this.studentParentService = studentParentService;
   }
 
-  @PostMapping("parent")
-  @PreAuthorize(ADMIN_PREAUTHORIZE)
+  @PostMapping(ParentRoutes.BASE)
+  @PreAuthorize(AuthConstants.ADMIN_PREAUTHORIZE)
   public ResponseEntity<DefaultResponse> upsertParentInfo(
       @RequestBody @Valid List<Map<String, Object>> parentInfoForm) {
     return ResponseEntity.ok(studentParentService.upsertParentInfo(parentInfoForm));
   }
 
-  @DeleteMapping("parent")
-  @PreAuthorize(ADMIN_PREAUTHORIZE)
+  @DeleteMapping(ParentRoutes.BASE)
+  @PreAuthorize(AuthConstants.ADMIN_PREAUTHORIZE)
   public ResponseEntity<DefaultResponse> deleteParentInfo(
       @RequestBody List<Map<String, Long>> ids) {
     return ResponseEntity.ok(studentParentService.deleteParentInfo(ids));

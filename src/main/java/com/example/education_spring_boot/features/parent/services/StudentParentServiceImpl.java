@@ -12,6 +12,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.education_spring_boot.features.parent.models.entities.StudentParent;
 import com.example.education_spring_boot.features.parent.repositories.StudentParentRepo;
+import com.example.education_spring_boot.shared.constants.database.CommonColumnNames;
+import com.example.education_spring_boot.shared.constants.datetime.DateTimeConstants;
+import com.example.education_spring_boot.shared.constants.generic.JsonKeys;
 import com.example.education_spring_boot.shared.exception.DatabaseException;
 import com.example.education_spring_boot.shared.model.DefaultResponse;
 import com.example.education_spring_boot.shared.utils.DateTimeUtils;
@@ -35,14 +38,16 @@ public class StudentParentServiceImpl implements StudentParentService {
   public void addParentInfo(Map<String, Object> addColumns) {
     StringBuilder sql = new StringBuilder("INSERT INTO student_parent (");
     List<Object> params = new ArrayList<>();
-    if (addColumns.containsKey("birth_date")) {
+    if (addColumns.containsKey(CommonColumnNames.BIRTH_DATE)) {
       LocalDate localDate =
-          dateTimeUtils.changeTimezone(addColumns.get("birth_date").toString(), "Asia/Bangkok");
-      addColumns.put("birth_date", localDate);
+          dateTimeUtils.changeTimezone(
+              addColumns.get(CommonColumnNames.BIRTH_DATE).toString(),
+              DateTimeConstants.BANGKOK_ZONE);
+      addColumns.put(CommonColumnNames.BIRTH_DATE, localDate);
     }
     addColumns.forEach(
         (key, value) -> {
-          if (!Objects.equals(key, "id")) {
+          if (!Objects.equals(key, JsonKeys.ID)) {
             sql.append(key).append(", ");
             params.add(value);
           }
@@ -50,7 +55,7 @@ public class StudentParentServiceImpl implements StudentParentService {
     sql.delete(sql.length() - 2, sql.length()).append(") VALUES (");
     addColumns.forEach(
         (key, value) -> {
-          if (!Objects.equals(key, "id")) {
+          if (!Objects.equals(key, JsonKeys.ID)) {
             sql.append("?, ");
           }
         });
@@ -64,21 +69,23 @@ public class StudentParentServiceImpl implements StudentParentService {
   public void updateParentInfo(Map<String, Object> updateColumns) {
     StringBuilder sql = new StringBuilder("UPDATE student_parent SET ");
     List<Object> params = new ArrayList<>();
-    if (updateColumns.containsKey("birth_date")) {
+    if (updateColumns.containsKey(CommonColumnNames.BIRTH_DATE)) {
       LocalDate localDate =
-          dateTimeUtils.changeTimezone(updateColumns.get("birth_date").toString(), "Asia/Bangkok");
-      updateColumns.put("birth_date", localDate);
+          dateTimeUtils.changeTimezone(
+              updateColumns.get(CommonColumnNames.BIRTH_DATE).toString(),
+              DateTimeConstants.BANGKOK_ZONE);
+      updateColumns.put(CommonColumnNames.BIRTH_DATE, localDate);
     }
     updateColumns.forEach(
         (key, value) -> {
-          if (!Objects.equals(key, "id")) {
+          if (!Objects.equals(key, JsonKeys.ID)) {
             sql.append(key).append(" = ?, ");
             params.add(value);
           }
         });
     sql.delete(sql.length() - 2, sql.length() - 1);
     sql.append("WHERE id = ?");
-    params.add(updateColumns.get("id"));
+    params.add(updateColumns.get(JsonKeys.ID));
     jdbcTemplate.update(sql.toString(), params.toArray());
   }
 
@@ -87,7 +94,7 @@ public class StudentParentServiceImpl implements StudentParentService {
     try {
       upsertColumns.forEach(
           upsertColumn -> {
-            Number id = (Number) upsertColumn.get("id");
+            Number id = (Number) upsertColumn.get(JsonKeys.ID);
             Optional<StudentParent> parent = studentParentRepo.findById(id.longValue());
             if (parent.isEmpty()) {
               addParentInfo(upsertColumn);
@@ -106,7 +113,7 @@ public class StudentParentServiceImpl implements StudentParentService {
     try {
       ids.forEach(
           id -> {
-            studentParentRepo.deleteById(id.get("id"));
+            studentParentRepo.deleteById(id.get(JsonKeys.ID));
           });
       return new DefaultResponse(new Date(), "Deleted parent info successfully", "none");
     } catch (DataAccessException e) {

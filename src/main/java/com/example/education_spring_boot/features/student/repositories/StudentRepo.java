@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.education_spring_boot.features.department.constants.DepartmentTables;
 import com.example.education_spring_boot.features.major.constants.MajorTables;
+import com.example.education_spring_boot.features.student.constants.StudentColumns;
 import com.example.education_spring_boot.features.student.models.dtos.detail.PersonalInfo;
 import com.example.education_spring_boot.features.student.models.entities.Student;
 
@@ -23,5 +24,5 @@ public interface StudentRepo
           + "(s.identity, s.fullName, s.birthDate, s.gender, s.permanentAddress, s.temporaryAddress, s.ethnicGroup, s.religion, s.citizenId, s.avatar) "
           + "FROM Student s "
           + "WHERE s.identity = :identity")
-  PersonalInfo findByIdentity(@Param("identity") String identity);
+  PersonalInfo findByIdentity(@Param(StudentColumns.IDENTITY) String identity);
 }

@@ -2,7 +2,11 @@ package com.example.education_spring_boot.features.parent.models.entities;
 
 import java.time.LocalDate;
 
+import com.example.education_spring_boot.features.parent.constants.ParentColumns;
+import com.example.education_spring_boot.features.parent.constants.ParentTables;
+import com.example.education_spring_boot.features.student.constants.StudentColumns;
 import com.example.education_spring_boot.features.student.models.entities.Student;
+import com.example.education_spring_boot.shared.constants.database.CommonColumnNames;
 import com.example.education_spring_boot.shared.enums.ParentRelationshipEnum;
 
 import jakarta.persistence.*;
@@ -14,26 +18,29 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "student_parent")
+@Table(name = ParentTables.NAME)
 public class StudentParent {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
   @ManyToOne
-  @JoinColumn(name = "student_id", referencedColumnName = "identity", nullable = false)
+  @JoinColumn(
+      name = CommonColumnNames.STUDENT_ID,
+      referencedColumnName = StudentColumns.IDENTITY,
+      nullable = false)
   private Student studentId;
 
-  @Column(name = "full_name", length = 100, nullable = false)
+  @Column(name = CommonColumnNames.FULL_NAME, length = 100, nullable = false)
   private String fullName;
 
-  @Column(name = "birth_date", nullable = false)
+  @Column(name = CommonColumnNames.BIRTH_DATE, nullable = false)
   private LocalDate birthDate;
 
-  @Column(name = "nationality", length = 100, nullable = false)
+  @Column(name = ParentColumns.NATIONALITY, length = 100, nullable = false)
   private String nationality;
 
-  @Column(name = "permanent_address", nullable = false)
+  @Column(name = CommonColumnNames.PERMANENT_ADDRESS, nullable = false)
   private String permanentAddress;
 
   @Enumerated(EnumType.STRING)

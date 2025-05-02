@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.education_spring_boot.features.parent.models.dtos.ParentInfo;
 import com.example.education_spring_boot.features.parent.models.entities.StudentParent;
+import com.example.education_spring_boot.features.student.constants.StudentColumns;
 
 @Repository
 public interface StudentParentRepo extends JpaRepository<StudentParent, Long> {
@@ -17,5 +18,5 @@ public interface StudentParentRepo extends JpaRepository<StudentParent, Long> {
           + "(sp.id, sp.fullName, sp.birthDate, sp.nationality, sp.permanentAddress, sp.relationship) "
           + "FROM StudentParent sp "
           + "WHERE sp.studentId.identity = :identity")
-  List<ParentInfo> findByIdentity(@Param("identity") String identity);
+  List<ParentInfo> findByIdentity(@Param(StudentColumns.IDENTITY) String identity);
 }

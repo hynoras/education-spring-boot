@@ -34,17 +34,17 @@ public class Student {
   @JoinColumn(name = StudentColumns.ACCOUNT_ID, unique = true)
   private Account account;
 
-  @Column(name = StudentColumns.FULL_NAME, nullable = false, unique = true)
+  @Column(name = CommonColumnNames.FULL_NAME, nullable = false, unique = true)
   private String fullName;
 
-  @Column(name = StudentColumns.BIRTH_DATE, columnDefinition = "DATE")
+  @Column(name = CommonColumnNames.BIRTH_DATE, columnDefinition = "DATE")
   private LocalDate birthDate;
 
   @Enumerated(EnumType.STRING)
   @Column(name = CommonColumnNames.GENDER)
   private GenderEnum gender;
 
-  @Column(name = StudentColumns.PERMANENT_ADDRESS, nullable = false)
+  @Column(name = CommonColumnNames.PERMANENT_ADDRESS, nullable = false)
   @ColumnDefault(SqlDefaults.UNKNOWN)
   private String permanentAddress;
 
