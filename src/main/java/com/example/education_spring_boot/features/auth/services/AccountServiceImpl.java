@@ -5,8 +5,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -82,7 +82,7 @@ public class AccountServiceImpl implements AccountService {
     } catch (DataAccessException e) {
       if (!authentication.isAuthenticated()
           || "anonymousUser".equals(authentication.getPrincipal())) {
-        throw new BadCredentialsException("Username or password is incorrect!");
+        throw new AuthenticationCredentialsNotFoundException("Username or password is incorrect!");
       } else {
         throw new DatabaseException("An error occurred when fetching account details: ", e);
       }

@@ -19,7 +19,7 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(
         new DefaultResponse(
             new Date(), "Username or password is incorrect!", request.getDescription(false)),
-        HttpStatus.FORBIDDEN);
+        HttpStatus.UNAUTHORIZED);
   }
 
   @ExceptionHandler(ResourceNotFoundException.class)
