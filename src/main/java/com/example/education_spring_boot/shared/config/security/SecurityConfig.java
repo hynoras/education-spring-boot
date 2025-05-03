@@ -1,5 +1,6 @@
 package com.example.education_spring_boot.shared.config.security;
 
+import com.example.education_spring_boot.shared.constants.auth.AuthorityRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,10 +39,10 @@ public class SecurityConfig {
         .authorizeHttpRequests(
             auth ->
                 auth.requestMatchers("/api/auth/register")
-                    .hasAuthority("ADMIN")
-                    .requestMatchers("/api/admin/**")
-                    .hasAuthority("ADMIN")
-                    .requestMatchers("/api/auth/login", "/api/auth/get-user", "health")
+                    .hasAuthority(AuthorityRoles.ADMIN)
+                    .requestMatchers("/api/**")
+                    .hasAuthority(AuthorityRoles.ADMIN)
+                    .requestMatchers("/api/auth/login", "/api/auth/account", "health")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
