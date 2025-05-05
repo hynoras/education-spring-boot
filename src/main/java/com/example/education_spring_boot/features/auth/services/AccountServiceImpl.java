@@ -3,6 +3,8 @@ package com.example.education_spring_boot.features.auth.services;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
@@ -28,6 +30,7 @@ public class AccountServiceImpl implements AccountService {
   private final PasswordEncoder passwordEncoder;
   private final AuthenticationManager authenticationManager;
   private final JwtUtils jwtUtils;
+  private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
 
   @Autowired
   public AccountServiceImpl(

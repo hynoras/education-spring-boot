@@ -12,7 +12,7 @@ import com.example.education_spring_boot.features.department.models.dtos.Departm
 import com.example.education_spring_boot.features.department.services.DepartmentServiceImpl;
 
 @RestController
-@RequestMapping("api/admin")
+@RequestMapping("api")
 public class DepartmentController {
 
   private final DepartmentServiceImpl departmentService;

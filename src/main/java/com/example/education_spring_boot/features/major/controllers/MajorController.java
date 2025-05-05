@@ -12,7 +12,7 @@ import com.example.education_spring_boot.features.major.models.dtos.MajorNameLis
 import com.example.education_spring_boot.features.major.services.MajorServiceImpl;
 
 @RestController
-@RequestMapping("api/admin")
+@RequestMapping("api")
 public class MajorController {
 
   private final MajorServiceImpl majorService;

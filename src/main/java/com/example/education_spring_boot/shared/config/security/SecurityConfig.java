@@ -1,6 +1,5 @@
 package com.example.education_spring_boot.shared.config.security;
 
-import com.example.education_spring_boot.shared.constants.auth.AuthorityRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.example.education_spring_boot.features.auth.services.CustomUserDetailService;
+import com.example.education_spring_boot.shared.constants.auth.AuthorityRoles;
 
 @Configuration
 public class SecurityConfig {
@@ -40,10 +40,10 @@ public class SecurityConfig {
             auth ->
                 auth.requestMatchers("/api/auth/register")
                     .hasAuthority(AuthorityRoles.ADMIN)
+                    .requestMatchers("/api/auth/login", "/api/auth/account", "/health")
+                    .permitAll()
                     .requestMatchers("/api/**")
                     .hasAuthority(AuthorityRoles.ADMIN)
-                    .requestMatchers("/api/auth/login", "/api/auth/account", "health")
-                    .permitAll()
                     .anyRequest()
                     .authenticated())
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

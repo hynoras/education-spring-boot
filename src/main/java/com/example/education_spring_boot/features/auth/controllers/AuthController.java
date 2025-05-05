@@ -2,6 +2,9 @@ package com.example.education_spring_boot.features.auth.controllers;
 
 import java.util.Map;
 
+import com.example.education_spring_boot.shared.constants.controller.ControllerMappings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,7 +15,6 @@ import com.example.education_spring_boot.features.auth.models.dtos.LoginRequest;
 import com.example.education_spring_boot.features.auth.models.dtos.RegisterRequest;
 import com.example.education_spring_boot.features.auth.services.AccountServiceImpl;
 import com.example.education_spring_boot.shared.constants.auth.AuthConstants;
-import com.example.education_spring_boot.shared.constants.controller.ControllerMappings;
 
 import jakarta.validation.Valid;
 
@@ -20,6 +22,7 @@ import jakarta.validation.Valid;
 @RequestMapping(ControllerMappings.API_PREFIX)
 public class AuthController {
   private final AccountServiceImpl accountService;
+  private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
   @Autowired
   public AuthController(AccountServiceImpl accountService) {
