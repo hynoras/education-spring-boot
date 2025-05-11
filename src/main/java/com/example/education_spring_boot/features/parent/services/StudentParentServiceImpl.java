@@ -64,7 +64,6 @@ public class StudentParentServiceImpl implements StudentParentService {
             }
           });
       sql.delete(sql.length() - 2, sql.length()).append(")");
-      logger.info("SQL: {}", sql);
       jdbcTemplate.update(sql.toString(), params.toArray());
     } catch (DataAccessException e) {
       throw new DatabaseException("An error occurred while inserting parent information", e);
@@ -110,7 +109,6 @@ public class StudentParentServiceImpl implements StudentParentService {
           });
       return new DefaultResponse(new Date(), "Upsert parent info successfully", "none");
     } catch (RuntimeException e) {
-        logger.debug("error: ", e);
       throw new RuntimeException("An error occurred while upserting parent information", e);
     }
   }
