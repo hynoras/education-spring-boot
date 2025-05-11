@@ -10,5 +10,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MajorNameList {
+  private Integer major_id;
   private String major_name;
 }

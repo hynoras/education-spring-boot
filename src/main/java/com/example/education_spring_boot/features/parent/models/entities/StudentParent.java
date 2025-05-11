@@ -22,7 +22,8 @@ import lombok.*;
 public class StudentParent {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  @Column(name = ParentColumns.PARENT_ID)
+  private Long parentId;
 
   @ManyToOne
   @JoinColumn(

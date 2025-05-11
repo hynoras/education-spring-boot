@@ -15,7 +15,7 @@ import com.example.education_spring_boot.features.student.constants.StudentColum
 public interface StudentParentRepo extends JpaRepository<StudentParent, Long> {
   @Query(
       "SELECT new com.example.education_spring_boot.features.parent.models.dtos.ParentInfo"
-          + "(sp.id, sp.fullName, sp.birthDate, sp.nationality, sp.permanentAddress, sp.relationship) "
+          + "(sp.parentId, sp.fullName, sp.birthDate, sp.nationality, sp.permanentAddress, sp.relationship) "
           + "FROM StudentParent sp "
           + "WHERE sp.studentId.identity = :identity")
   List<ParentInfo> findByIdentity(@Param(StudentColumns.IDENTITY) String identity);

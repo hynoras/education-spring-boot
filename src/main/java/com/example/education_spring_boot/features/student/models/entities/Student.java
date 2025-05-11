@@ -6,7 +6,6 @@ import java.util.List;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.example.education_spring_boot.features.auth.models.entities.Account;
-import com.example.education_spring_boot.features.location.models.entities.Location;
 import com.example.education_spring_boot.features.major.models.entities.Major;
 import com.example.education_spring_boot.features.parent.models.entities.StudentParent;
 import com.example.education_spring_boot.features.student.constants.StudentColumns;
@@ -65,10 +64,6 @@ public class Student {
 
   @Column(name = StudentColumns.AVATAR)
   private String avatar;
-
-  @ManyToOne
-  @JoinColumn(name = "province_id", referencedColumnName = "provinceid")
-  private Location province;
 
   @ManyToOne
   @JoinColumn(name = "major_id", referencedColumnName = "majorid")

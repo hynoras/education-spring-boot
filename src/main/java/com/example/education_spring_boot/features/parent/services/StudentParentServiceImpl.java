@@ -3,6 +3,7 @@ package com.example.education_spring_boot.features.parent.services;
 import java.time.LocalDate;
 import java.util.*;
 
+import com.example.education_spring_boot.features.parent.constants.ParentColumns;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,33 +37,38 @@ public class StudentParentServiceImpl implements StudentParentService {
 
   @Override
   public void addParentInfo(Map<String, Object> addColumns) {
-    StringBuilder sql = new StringBuilder("INSERT INTO student_parent (");
-    List<Object> params = new ArrayList<>();
-    if (addColumns.containsKey(CommonColumnNames.BIRTH_DATE)) {
-      LocalDate localDate =
-          dateTimeUtils.changeTimezone(
-              addColumns.get(CommonColumnNames.BIRTH_DATE).toString(),
-              DateTimeConstants.BANGKOK_ZONE);
-      addColumns.put(CommonColumnNames.BIRTH_DATE, localDate);
+    try {
+      StringBuilder sql = new StringBuilder("INSERT INTO student_parent (");
+      List<Object> params = new ArrayList<>();
+      addColumns.remove(JsonKeys.ID);
+        addColumns.remove(ParentColumns.PARENT_ID);
+      if (addColumns.containsKey(CommonColumnNames.BIRTH_DATE)) {
+        LocalDate localDate =
+            dateTimeUtils.changeTimezone(
+                addColumns.get(CommonColumnNames.BIRTH_DATE).toString(),
+                DateTimeConstants.BANGKOK_ZONE);
+        addColumns.put(CommonColumnNames.BIRTH_DATE, localDate);
+      }
+      addColumns.forEach(
+          (key, value) -> {
+            if (!Objects.equals(key, JsonKeys.ID)) {
+              sql.append(key).append(", ");
+              params.add(value);
+            }
+          });
+      sql.delete(sql.length() - 2, sql.length()).append(") VALUES (");
+      addColumns.forEach(
+          (key, value) -> {
+            if (!Objects.equals(key, JsonKeys.ID)) {
+              sql.append("?, ");
+            }
+          });
+      sql.delete(sql.length() - 2, sql.length()).append(")");
+      logger.info("SQL: {}", sql);
+      jdbcTemplate.update(sql.toString(), params.toArray());
+    } catch (DataAccessException e) {
+      throw new DatabaseException("An error occurred while inserting parent information", e);
     }
-    addColumns.forEach(
-        (key, value) -> {
-          if (!Objects.equals(key, JsonKeys.ID)) {
-            sql.append(key).append(", ");
-            params.add(value);
-          }
-        });
-    sql.delete(sql.length() - 2, sql.length()).append(") VALUES (");
-    addColumns.forEach(
-        (key, value) -> {
-          if (!Objects.equals(key, JsonKeys.ID)) {
-            sql.append("?, ");
-          }
-        });
-    sql.delete(sql.length() - 2, sql.length()).append(")");
-    logger.debug("SQL: {}", sql);
-    logger.debug("params: {}", params);
-    jdbcTemplate.update(sql.toString(), params.toArray());
   }
 
   @Override
@@ -84,8 +90,8 @@ public class StudentParentServiceImpl implements StudentParentService {
           }
         });
     sql.delete(sql.length() - 2, sql.length() - 1);
-    sql.append("WHERE id = ?");
-    params.add(updateColumns.get(JsonKeys.ID));
+    sql.append("WHERE parent_id = ?");
+    params.add(updateColumns.get(ParentColumns.PARENT_ID));
     jdbcTemplate.update(sql.toString(), params.toArray());
   }
 
@@ -94,8 +100,8 @@ public class StudentParentServiceImpl implements StudentParentService {
     try {
       upsertColumns.forEach(
           upsertColumn -> {
-            Number id = (Number) upsertColumn.get(JsonKeys.ID);
-            Optional<StudentParent> parent = studentParentRepo.findById(id.longValue());
+            Number parent_id = (Number) upsertColumn.get(ParentColumns.PARENT_ID);
+            Optional<StudentParent> parent = studentParentRepo.findById(parent_id.longValue());
             if (parent.isEmpty()) {
               addParentInfo(upsertColumn);
             } else {
@@ -104,6 +110,7 @@ public class StudentParentServiceImpl implements StudentParentService {
           });
       return new DefaultResponse(new Date(), "Upsert parent info successfully", "none");
     } catch (RuntimeException e) {
+        logger.debug("error: ", e);
       throw new RuntimeException("An error occurred while upserting parent information", e);
     }
   }

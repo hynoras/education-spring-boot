@@ -71,7 +71,7 @@ public class StudentController {
   @GetMapping(StudentRoutes.BASE + StudentRoutes.BY_ID)
   @PreAuthorize(AuthConstants.ADMIN_PREAUTHORIZE)
   public ResponseEntity<StudentDetail> getStudentDetail(
-      @PathVariable(StudentColumns.AVATAR) String identity) {
+      @PathVariable(StudentColumns.IDENTITY) String identity) {
     return ResponseEntity.ok(studentService.getStudentDetail(identity));
   }
 

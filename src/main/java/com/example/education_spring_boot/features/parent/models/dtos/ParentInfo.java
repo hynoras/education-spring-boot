@@ -12,7 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class ParentInfo {
-  private Long id;
+  private Long parent_id;
   private String full_name;
   private LocalDate birth_date;
   private String nationality;
