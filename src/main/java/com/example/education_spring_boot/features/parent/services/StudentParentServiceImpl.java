@@ -3,7 +3,6 @@ package com.example.education_spring_boot.features.parent.services;
 import java.time.LocalDate;
 import java.util.*;
 
-import com.example.education_spring_boot.features.parent.constants.ParentColumns;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import com.example.education_spring_boot.features.parent.constants.ParentColumns;
 import com.example.education_spring_boot.features.parent.models.entities.StudentParent;
 import com.example.education_spring_boot.features.parent.repositories.StudentParentRepo;
 import com.example.education_spring_boot.shared.constants.database.CommonColumnNames;
@@ -40,8 +40,7 @@ public class StudentParentServiceImpl implements StudentParentService {
     try {
       StringBuilder sql = new StringBuilder("INSERT INTO student_parent (");
       List<Object> params = new ArrayList<>();
-      addColumns.remove(JsonKeys.ID);
-        addColumns.remove(ParentColumns.PARENT_ID);
+      addColumns.remove(ParentColumns.PARENT_ID);
       if (addColumns.containsKey(CommonColumnNames.BIRTH_DATE)) {
         LocalDate localDate =
             dateTimeUtils.changeTimezone(
@@ -59,7 +58,7 @@ public class StudentParentServiceImpl implements StudentParentService {
       sql.delete(sql.length() - 2, sql.length()).append(") VALUES (");
       addColumns.forEach(
           (key, value) -> {
-            if (!Objects.equals(key, JsonKeys.ID)) {
+            if (!Objects.equals(key, ParentColumns.PARENT_ID)) {
               sql.append("?, ");
             }
           });
@@ -83,7 +82,7 @@ public class StudentParentServiceImpl implements StudentParentService {
     }
     updateColumns.forEach(
         (key, value) -> {
-          if (!Objects.equals(key, JsonKeys.ID)) {
+          if (!Objects.equals(key, ParentColumns.PARENT_ID)) {
             sql.append(key).append(" = ?, ");
             params.add(value);
           }
@@ -114,11 +113,11 @@ public class StudentParentServiceImpl implements StudentParentService {
   }
 
   @Override
-  public DefaultResponse deleteParentInfo(List<Map<String, Long>> ids) {
+  public DefaultResponse deleteParentInfo(List<Map<String, Long>> parent_ids) {
     try {
-      ids.forEach(
-          id -> {
-            studentParentRepo.deleteById(id.get(JsonKeys.ID));
+      parent_ids.forEach(
+          parent_id -> {
+            studentParentRepo.deleteById(parent_id.get(ParentColumns.PARENT_ID));
           });
       return new DefaultResponse(new Date(), "Deleted parent info successfully", "none");
     } catch (DataAccessException e) {
