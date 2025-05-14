@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.example.education_spring_boot.features.auth.constants.AccountColumns;
+import com.example.education_spring_boot.features.auth.constants.AccountRoutes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,10 +71,16 @@ public class StudentController {
   }
 
   @GetMapping(StudentRoutes.BASE + StudentRoutes.BY_ID)
-  @PreAuthorize(AuthConstants.ADMIN_PREAUTHORIZE)
+  @PreAuthorize(AuthConstants.ADMIN_STUDENT_PREAUTHORIZE)
   public ResponseEntity<StudentDetail> getStudentDetail(
       @PathVariable(StudentColumns.IDENTITY) String identity) {
     return ResponseEntity.ok(studentService.getStudentDetail(identity));
+  }
+
+  @GetMapping(StudentRoutes.BASE + StudentRoutes.ID + AccountRoutes.BY_USERNAME)
+  public ResponseEntity<String> getIdentityByUsername(
+          @PathVariable(AccountColumns.USERNAME) String username) {
+    return ResponseEntity.ok(studentService.getIdentityByUsername(username));
   }
 
   @PostMapping(StudentRoutes.BASE)
