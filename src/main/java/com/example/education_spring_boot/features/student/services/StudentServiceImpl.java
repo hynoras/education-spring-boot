@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,8 +35,10 @@ import com.example.education_spring_boot.features.student.models.dtos.detail.Stu
 import com.example.education_spring_boot.features.student.models.dtos.list.StudentList;
 import com.example.education_spring_boot.features.student.models.entities.Student;
 import com.example.education_spring_boot.features.student.repositories.StudentRepo;
+import com.example.education_spring_boot.features.student.utils.StudentAuthentication;
 import com.example.education_spring_boot.shared.constants.controller.SortConstants;
 import com.example.education_spring_boot.shared.constants.datetime.DateTimeConstants;
+import com.example.education_spring_boot.shared.exception.AccessDeniedException;
 import com.example.education_spring_boot.shared.exception.DatabaseException;
 import com.example.education_spring_boot.shared.model.DefaultResponse;
 import com.example.education_spring_boot.shared.model.PaginatedList;
@@ -48,6 +52,7 @@ public class StudentServiceImpl implements StudentService {
   private final JdbcTemplate jdbcTemplate;
   private final Cloudinary cloudinary;
   private final ModelMapper modelMapper;
+  private final StudentAuthentication studentAuthentication;
   private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
 
   @Autowired
@@ -57,13 +62,15 @@ public class StudentServiceImpl implements StudentService {
       StudentSpecification studentSpecification,
       JdbcTemplate jdbcTemplate,
       Cloudinary cloudinary,
-      ModelMapper modelMapper) {
+      ModelMapper modelMapper,
+      StudentAuthentication studentAuthentication) {
     this.studentRepo = studentRepo;
     this.studentParentRepo = studentParentRepo;
     this.studentSpecification = studentSpecification;
     this.jdbcTemplate = jdbcTemplate;
     this.cloudinary = cloudinary;
     this.modelMapper = modelMapper;
+    this.studentAuthentication = studentAuthentication;
   }
 
   @Override
@@ -119,11 +126,27 @@ public class StudentServiceImpl implements StudentService {
   @Override
   public StudentDetail getStudentDetail(String identity) {
     try {
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+      if (!studentAuthentication.isCorrectStudent(identity, getIdentityByUsername(authentication.getName()))) {
+        throw new AccessDeniedException("Access denied");
+      }
       PersonalInfo personalInformation = studentRepo.findByIdentity(identity);
       List<ParentInfo> parentInformation = studentParentRepo.findByIdentity(identity);
       return new StudentDetail(personalInformation, parentInformation);
     } catch (DataAccessException e) {
       throw new DatabaseException("An error occurred while fetching student details", e);
+    }
+  }
+
+  public String getIdentityByUsername(String username) {
+    try {
+      return jdbcTemplate.queryForObject(
+              "SELECT s.identity FROM student s JOIN account a ON s.account_id = a.id WHERE a.username = ?",
+              String.class,
+              username);
+    } catch(DataAccessException e) {
+      logger.debug("error", e);
+      throw new DatabaseException("An error occurred while fetching student identity", e);
     }
   }
 

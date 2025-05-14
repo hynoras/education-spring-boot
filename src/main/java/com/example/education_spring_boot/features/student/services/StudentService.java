@@ -26,6 +26,8 @@ public interface StudentService {
 
   public StudentDetail getStudentDetail(String identity);
 
+  public String getIdentityByUsername(String username);
+
   public DefaultResponse addStudentPersonalInfo(PersonalInfoForm personalInfoForm);
 
   public DefaultResponse updateStudentPersonalInfo(

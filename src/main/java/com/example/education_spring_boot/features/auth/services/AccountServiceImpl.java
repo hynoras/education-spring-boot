@@ -76,19 +76,18 @@ public class AccountServiceImpl implements AccountService {
 
   @Override
   public Map<String, String> getAccountDetail() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
     try {
+      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
       Optional<String> roleOptional =
           authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).findFirst();
       String role = roleOptional.orElse("USER");
-      return Map.of(AccountColumns.USERNAME, authentication.getName(), AccountColumns.ROLE, role);
-    } catch (DataAccessException e) {
       if (!authentication.isAuthenticated()
           || "anonymousUser".equals(authentication.getPrincipal())) {
         throw new AuthenticationCredentialsNotFoundException("Username or password is incorrect!");
-      } else {
-        throw new DatabaseException("An error occurred when fetching account details: ", e);
       }
+      return Map.of(AccountColumns.USERNAME, authentication.getName(), AccountColumns.ROLE, role);
+    } catch (DataAccessException e) {
+      throw new DatabaseException("An error occurred when fetching account details: ", e);
     }
   }
 }

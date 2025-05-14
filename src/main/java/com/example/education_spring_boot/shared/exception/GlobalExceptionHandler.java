@@ -22,6 +22,17 @@ public class GlobalExceptionHandler {
         HttpStatus.UNAUTHORIZED);
   }
 
+  @ExceptionHandler(AccessDeniedException.class)
+  public ResponseEntity<DefaultResponse> handleAccessDeniedException(
+      AccessDeniedException ex, WebRequest request) {
+    return new ResponseEntity<>(
+        new DefaultResponse(
+            new Date(),
+            "You are not allowed to access this resource!",
+            request.getDescription(false)),
+        HttpStatus.UNAUTHORIZED);
+  }
+
   @ExceptionHandler(ResourceNotFoundException.class)
   public ResponseEntity<DefaultResponse> handleResourceNotFoundException(
       ResourceNotFoundException ex, WebRequest request) {

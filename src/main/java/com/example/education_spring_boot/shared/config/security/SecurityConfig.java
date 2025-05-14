@@ -40,8 +40,10 @@ public class SecurityConfig {
             auth ->
                 auth.requestMatchers("/api/auth/register")
                     .hasAuthority(AuthorityRoles.ADMIN)
-                    .requestMatchers("/api/auth/login", "/api/auth/account", "/health")
+                    .requestMatchers("/api/auth/login", "/api/auth/account", "/api/student/identity/{username}")
                     .permitAll()
+                    .requestMatchers("/api/student/{identity}")
+                    .hasAnyAuthority(AuthorityRoles.ADMIN, AuthorityRoles.STUDENT)
                     .requestMatchers("/api/**")
                     .hasAuthority(AuthorityRoles.ADMIN)
                     .anyRequest()
