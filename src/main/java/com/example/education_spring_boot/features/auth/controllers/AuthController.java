@@ -15,7 +15,9 @@ import com.example.education_spring_boot.features.auth.models.dtos.RegisterReque
 import com.example.education_spring_boot.features.auth.services.AccountServiceImpl;
 import com.example.education_spring_boot.shared.constants.auth.AuthConstants;
 import com.example.education_spring_boot.shared.constants.controller.ControllerMappings;
+import com.example.education_spring_boot.shared.model.DefaultResponse;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 @RestController
@@ -37,10 +39,9 @@ public class AuthController {
   }
 
   @PostMapping(AccountRoutes.BASE + AccountRoutes.LOGIN)
-  public ResponseEntity<Map<String, String>> authenticate(
-      @Valid @RequestBody LoginRequest loginRequest) {
-    Map<String, String> response = accountService.login(loginRequest);
-    return ResponseEntity.ok(response);
+  public ResponseEntity<DefaultResponse> authenticate(
+      @Valid @RequestBody LoginRequest loginRequest, HttpServletResponse response) {
+    return ResponseEntity.ok(accountService.login(loginRequest, response));
   }
 
   @GetMapping(AccountRoutes.BASE + AccountRoutes.ACCOUNT)

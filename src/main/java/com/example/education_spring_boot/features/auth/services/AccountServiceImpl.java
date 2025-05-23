@@ -1,8 +1,10 @@
 package com.example.education_spring_boot.features.auth.services;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
+import com.example.education_spring_boot.shared.constants.datetime.DateTimeConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +23,14 @@ import com.example.education_spring_boot.features.auth.models.dtos.LoginRequest;
 import com.example.education_spring_boot.features.auth.models.dtos.RegisterRequest;
 import com.example.education_spring_boot.features.auth.models.entities.Account;
 import com.example.education_spring_boot.features.auth.repositories.AccountRepo;
+import com.example.education_spring_boot.shared.constants.auth.AuthConstants;
 import com.example.education_spring_boot.shared.exception.DatabaseException;
+import com.example.education_spring_boot.shared.model.DefaultResponse;
+import com.example.education_spring_boot.shared.utils.CookieUtils;
 import com.example.education_spring_boot.shared.utils.JwtUtils;
+
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -30,6 +38,7 @@ public class AccountServiceImpl implements AccountService {
   private final PasswordEncoder passwordEncoder;
   private final AuthenticationManager authenticationManager;
   private final JwtUtils jwtUtils;
+  private final CookieUtils cookieUtils;
   private static final Logger logger = LoggerFactory.getLogger(AccountServiceImpl.class);
 
   @Autowired
@@ -37,11 +46,13 @@ public class AccountServiceImpl implements AccountService {
       AccountRepo accountRepo,
       PasswordEncoder passwordEncoder,
       AuthenticationManager authenticationManager,
-      JwtUtils jwtUtils) {
+      JwtUtils jwtUtils,
+      CookieUtils cookieUtils) {
     this.accountRepo = accountRepo;
     this.passwordEncoder = passwordEncoder;
     this.authenticationManager = authenticationManager;
     this.jwtUtils = jwtUtils;
+    this.cookieUtils = cookieUtils;
   }
 
   public String register(RegisterRequest registerRequest) {
@@ -58,17 +69,20 @@ public class AccountServiceImpl implements AccountService {
     }
   }
 
-  public Map<String, String> login(LoginRequest loginRequest) {
+  public DefaultResponse login(LoginRequest loginRequest, HttpServletResponse response) {
     try {
       Authentication authentication =
           authenticationManager.authenticate(
               new UsernamePasswordAuthenticationToken(
                   loginRequest.getUsername(), loginRequest.getPassword()));
-      String token = "";
       if (authentication.isAuthenticated()) {
-        token = jwtUtils.generateToken(loginRequest.getUsername());
+        String token = jwtUtils.generateToken(loginRequest.getUsername());
+        Cookie cookie =
+            cookieUtils.generateCookie(
+                "Authorization", token, DateTimeConstants.ONE_HOUR_IN_SECOND);
+        response.addCookie(cookie);
       }
-      return Map.of("token", token);
+      return new DefaultResponse(new Date(), "Logged in successfully", "");
     } catch (DataAccessException e) {
       throw new DatabaseException("An error occurred when authenticating: ", e);
     }
