@@ -22,6 +22,14 @@ public class GlobalExceptionHandler {
         HttpStatus.UNAUTHORIZED);
   }
 
+  @ExceptionHandler(JwtExpiredException.class)
+  public ResponseEntity<DefaultResponse> handleJwtExpiredException(
+      BadCredentialsException ex, WebRequest request) {
+    return new ResponseEntity<>(
+        new DefaultResponse(new Date(), "Token is expired!", request.getDescription(false)),
+        HttpStatus.UNAUTHORIZED);
+  }
+
   @ExceptionHandler(AccessDeniedException.class)
   public ResponseEntity<DefaultResponse> handleAccessDeniedException(
       AccessDeniedException ex, WebRequest request) {
