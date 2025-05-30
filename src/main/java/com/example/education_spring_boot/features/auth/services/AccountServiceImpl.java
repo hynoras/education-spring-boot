@@ -4,12 +4,14 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
+import com.example.education_spring_boot.shared.exception.JwtExpiredException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -84,6 +86,8 @@ public class AccountServiceImpl implements AccountService {
       return new DefaultResponse(new Date(), "Logged in successfully", "");
     } catch (DataAccessException e) {
       throw new DatabaseException("An error occurred when authenticating: ", e);
+    } catch (BadCredentialsException e) {
+      throw new BadCredentialsException("Username or password is incorrect!");
     }
   }
 
@@ -96,11 +100,13 @@ public class AccountServiceImpl implements AccountService {
       String role = roleOptional.orElse("USER");
       if (!authentication.isAuthenticated()
           || "anonymousUser".equals(authentication.getPrincipal())) {
-        throw new AuthenticationCredentialsNotFoundException("Username or password is incorrect!");
+        throw new JwtExpiredException("Jwt is expired!");
       }
       return Map.of(AccountColumns.USERNAME, authentication.getName(), AccountColumns.ROLE, role);
     } catch (DataAccessException e) {
       throw new DatabaseException("An error occurred when fetching account details: ", e);
+    } catch (AuthenticationCredentialsNotFoundException e) {
+      throw new AuthenticationCredentialsNotFoundException("Username or password is incorrect!");
     }
   }
 }
