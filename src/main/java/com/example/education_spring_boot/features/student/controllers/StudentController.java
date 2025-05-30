@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import com.example.education_spring_boot.features.auth.constants.AccountColumns;
-import com.example.education_spring_boot.features.auth.constants.AccountRoutes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.education_spring_boot.features.auth.constants.AccountColumns;
+import com.example.education_spring_boot.features.auth.constants.AccountRoutes;
 import com.example.education_spring_boot.features.department.constants.DepartmentTables;
 import com.example.education_spring_boot.features.major.constants.MajorTables;
 import com.example.education_spring_boot.features.student.constants.StudentColumns;
@@ -79,7 +79,7 @@ public class StudentController {
 
   @GetMapping(StudentRoutes.BASE + StudentRoutes.ID + AccountRoutes.BY_USERNAME)
   public ResponseEntity<String> getIdentityByUsername(
-          @PathVariable(AccountColumns.USERNAME) String username) {
+      @PathVariable(AccountColumns.USERNAME) String username) {
     return ResponseEntity.ok(studentService.getIdentityByUsername(username));
   }
 

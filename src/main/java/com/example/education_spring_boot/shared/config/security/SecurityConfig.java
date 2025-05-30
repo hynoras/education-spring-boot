@@ -40,7 +40,8 @@ public class SecurityConfig {
             auth ->
                 auth.requestMatchers("/api/auth/register")
                     .hasAuthority(AuthorityRoles.ADMIN)
-                    .requestMatchers("/api/auth/login", "/api/auth/account", "/api/student/identity/{username}")
+                    .requestMatchers(
+                        "/api/auth/login", "/api/auth/account", "/api/student/identity/{username}")
                     .permitAll()
                     .requestMatchers("/api/student/{identity}")
                     .hasAnyAuthority(AuthorityRoles.ADMIN, AuthorityRoles.STUDENT)
@@ -50,7 +51,9 @@ public class SecurityConfig {
                     .authenticated())
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
         .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authenticationProvider(authenticationProvider());
+        .authenticationProvider(authenticationProvider())
+        .exceptionHandling(
+            ex -> ex.authenticationEntryPoint((request, response, authException) -> {}));
     return http.build();
   }
 

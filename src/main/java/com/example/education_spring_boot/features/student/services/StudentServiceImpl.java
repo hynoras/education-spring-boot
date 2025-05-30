@@ -127,7 +127,8 @@ public class StudentServiceImpl implements StudentService {
   public StudentDetail getStudentDetail(String identity) {
     try {
       Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      if (!studentAuthentication.isCorrectStudent(identity, getIdentityByUsername(authentication.getName()))) {
+      if (!studentAuthentication.isCorrectStudent(
+          identity, getIdentityByUsername(authentication.getName()))) {
         throw new AccessDeniedException("Access denied");
       }
       PersonalInfo personalInformation = studentRepo.findByIdentity(identity);
@@ -141,10 +142,10 @@ public class StudentServiceImpl implements StudentService {
   public String getIdentityByUsername(String username) {
     try {
       return jdbcTemplate.queryForObject(
-              "SELECT s.identity FROM student s JOIN account a ON s.account_id = a.id WHERE a.username = ?",
-              String.class,
-              username);
-    } catch(DataAccessException e) {
+          "SELECT s.identity FROM student s JOIN account a ON s.account_id = a.id WHERE a.username = ?",
+          String.class,
+          username);
+    } catch (DataAccessException e) {
       logger.debug("error", e);
       throw new DatabaseException("An error occurred while fetching student identity", e);
     }
