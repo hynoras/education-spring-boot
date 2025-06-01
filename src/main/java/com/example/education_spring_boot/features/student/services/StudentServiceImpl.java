@@ -34,7 +34,6 @@ import com.example.education_spring_boot.features.student.models.dtos.detail.Stu
 import com.example.education_spring_boot.features.student.models.dtos.list.StudentList;
 import com.example.education_spring_boot.features.student.models.entities.Student;
 import com.example.education_spring_boot.features.student.repositories.StudentRepo;
-import com.example.education_spring_boot.features.student.utils.StudentAuthentication;
 import com.example.education_spring_boot.shared.constants.controller.SortConstants;
 import com.example.education_spring_boot.shared.constants.database.CommonColumnNames;
 import com.example.education_spring_boot.shared.constants.datetime.DateTimeConstants;
@@ -54,7 +53,6 @@ public class StudentServiceImpl implements StudentService {
   private final JdbcTemplate jdbcTemplate;
   private final Cloudinary cloudinary;
   private final ModelMapper modelMapper;
-  private final StudentAuthentication studentAuthentication;
   private final DateTimeUtils dateTimeUtils;
   private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
 
@@ -66,7 +64,6 @@ public class StudentServiceImpl implements StudentService {
       JdbcTemplate jdbcTemplate,
       Cloudinary cloudinary,
       ModelMapper modelMapper,
-      StudentAuthentication studentAuthentication,
       DateTimeUtils dateTimeUtils) {
     this.studentRepo = studentRepo;
     this.studentParentRepo = studentParentRepo;
@@ -74,7 +71,6 @@ public class StudentServiceImpl implements StudentService {
     this.jdbcTemplate = jdbcTemplate;
     this.cloudinary = cloudinary;
     this.modelMapper = modelMapper;
-    this.studentAuthentication = studentAuthentication;
     this.dateTimeUtils = dateTimeUtils;
   }
 
@@ -126,15 +122,14 @@ public class StudentServiceImpl implements StudentService {
   public StudentDetail getStudentDetail(String studentId) {
     try {
       if (AccountUtils.hasRole("STUDENT")) {
-        if (!studentAuthentication.isCorrectStudent(
-            studentId, getStudentIdByUsername(AccountUtils.getCurrentUsername()))) {
+        if (!Objects.equals(studentId, getStudentIdByUsername(AccountUtils.getCurrentUsername()))) {
           throw new AccessDeniedException("Access denied");
         }
       }
       PersonalInfo personalInformation = studentRepo.findByStudentId(studentId);
       List<ParentInfo> parentInformation = studentParentRepo.findByStudentId(studentId);
       return new StudentDetail(personalInformation, parentInformation);
-    } catch (RuntimeException e) {
+    } catch (DataAccessException e) {
       throw new DatabaseException("An error occurred while fetching student details", e);
     }
   }
