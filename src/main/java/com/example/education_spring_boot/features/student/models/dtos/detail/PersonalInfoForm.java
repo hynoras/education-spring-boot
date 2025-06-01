@@ -3,6 +3,7 @@ package com.example.education_spring_boot.features.student.models.dtos.detail;
 import java.time.LocalDate;
 
 import com.example.education_spring_boot.features.auth.models.entities.Account;
+import com.example.education_spring_boot.features.auth.utils.AccountDeserializer;
 import com.example.education_spring_boot.features.major.models.entities.Major;
 import com.example.education_spring_boot.features.major.utils.MajorDeserializer;
 import com.example.education_spring_boot.shared.enums.GenderEnum;
@@ -21,8 +22,10 @@ import lombok.*;
 @Builder
 public class PersonalInfoForm {
   @NotEmpty(message = "Student ID must not be empty")
-  private String identity;
+  private String student_id;
 
+  @JsonDeserialize(using = AccountDeserializer.class)
+  @JsonProperty("account")
   private Account account;
 
   @NotEmpty(message = "Student name must not be empty")

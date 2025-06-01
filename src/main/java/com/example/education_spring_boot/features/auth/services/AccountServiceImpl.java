@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
-import com.example.education_spring_boot.shared.exception.JwtExpiredException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +25,7 @@ import com.example.education_spring_boot.features.auth.models.entities.Account;
 import com.example.education_spring_boot.features.auth.repositories.AccountRepo;
 import com.example.education_spring_boot.shared.constants.datetime.DateTimeConstants;
 import com.example.education_spring_boot.shared.exception.DatabaseException;
+import com.example.education_spring_boot.shared.exception.JwtExpiredException;
 import com.example.education_spring_boot.shared.model.DefaultResponse;
 import com.example.education_spring_boot.shared.utils.CookieUtils;
 import com.example.education_spring_boot.shared.utils.JwtUtils;

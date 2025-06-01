@@ -45,26 +45,41 @@ public class JwtAuthFilter extends OncePerRequestFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
+
+    String path = request.getRequestURI();
+    if (path.startsWith("/api/auth/login")) {
+      filterChain.doFilter(request, response);
+      return;
+    }
+
     String token = null;
     String username = null;
-
-    if (request.getCookies() != null) {
-      Optional<Cookie> jwtCookie =
-          Arrays.stream(request.getCookies())
-              .filter(cookie -> "Authorization".equals(cookie.getName()))
-              .findFirst();
-      if (jwtCookie.isPresent()) {
-        try {
-          token = jwtCookie.get().getValue();
-          username = jwtUtils.extractUsername(token);
-        } catch (ExpiredJwtException e) {
-          Cookie expiredCookie = cookieUtils.generateCookie("Authorization", null, 0);
-          response.addCookie(expiredCookie);
-          response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT Token expired");
-          return;
-        }
-      }
+    Cookie[] cookies = request.getCookies();
+    if (cookies == null) {
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing Authorization cookie");
+      return;
     }
+    Optional<Cookie> jwtCookie =
+        Arrays.stream(request.getCookies())
+            .filter(cookie -> "Authorization".equals(cookie.getName()))
+            .findFirst();
+    if (jwtCookie.isEmpty()) {
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization cookie not found");
+      return;
+    }
+    try {
+      token = jwtCookie.get().getValue();
+      username = jwtUtils.extractUsername(token);
+    } catch (ExpiredJwtException e) {
+      Cookie expiredCookie = cookieUtils.generateCookie("Authorization", null, 0);
+      response.addCookie(expiredCookie);
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT Token expired");
+      return;
+    } catch (JwtException e) {
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
+      return;
+    }
+
     if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
       UserDetails userDetails = customUserDetailService.loadUserByUsername(username);
       if (jwtUtils.validateToken(token, userDetails)) {
@@ -73,6 +88,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 userDetails, null, userDetails.getAuthorities());
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authToken);
+      } else {
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT token validation failed");
+        return;
       }
     }
 

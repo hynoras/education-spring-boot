@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudentList {
-  private String identity;
+  private String student_id;
   private String full_name;
   private LocalDate birth_date;
   private GenderEnum gender;

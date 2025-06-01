@@ -1,10 +1,8 @@
 package com.example.education_spring_boot.features.student.services;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -17,32 +15,36 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.example.education_spring_boot.features.auth.utils.AccountUtils;
 import com.example.education_spring_boot.features.parent.models.dtos.ParentInfo;
 import com.example.education_spring_boot.features.parent.repositories.StudentParentRepo;
 import com.example.education_spring_boot.features.student.constants.StudentColumns;
-import com.example.education_spring_boot.features.student.models.dtos.detail.IdentityMap;
+import com.example.education_spring_boot.features.student.constants.StudentEntityFields;
+import com.example.education_spring_boot.features.student.constants.StudentTables;
 import com.example.education_spring_boot.features.student.models.dtos.detail.PersonalInfo;
 import com.example.education_spring_boot.features.student.models.dtos.detail.PersonalInfoForm;
 import com.example.education_spring_boot.features.student.models.dtos.detail.StudentDetail;
+import com.example.education_spring_boot.features.student.models.dtos.detail.StudentIdMap;
 import com.example.education_spring_boot.features.student.models.dtos.list.StudentList;
 import com.example.education_spring_boot.features.student.models.entities.Student;
 import com.example.education_spring_boot.features.student.repositories.StudentRepo;
 import com.example.education_spring_boot.features.student.utils.StudentAuthentication;
 import com.example.education_spring_boot.shared.constants.controller.SortConstants;
+import com.example.education_spring_boot.shared.constants.database.CommonColumnNames;
 import com.example.education_spring_boot.shared.constants.datetime.DateTimeConstants;
 import com.example.education_spring_boot.shared.exception.AccessDeniedException;
 import com.example.education_spring_boot.shared.exception.DatabaseException;
 import com.example.education_spring_boot.shared.model.DefaultResponse;
 import com.example.education_spring_boot.shared.model.PaginatedList;
 import com.example.education_spring_boot.shared.specs.StudentSpecification;
+import com.example.education_spring_boot.shared.utils.DateTimeUtils;
+import com.example.education_spring_boot.shared.utils.SqlUtils;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -53,6 +55,7 @@ public class StudentServiceImpl implements StudentService {
   private final Cloudinary cloudinary;
   private final ModelMapper modelMapper;
   private final StudentAuthentication studentAuthentication;
+  private final DateTimeUtils dateTimeUtils;
   private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
 
   @Autowired
@@ -63,7 +66,8 @@ public class StudentServiceImpl implements StudentService {
       JdbcTemplate jdbcTemplate,
       Cloudinary cloudinary,
       ModelMapper modelMapper,
-      StudentAuthentication studentAuthentication) {
+      StudentAuthentication studentAuthentication,
+      DateTimeUtils dateTimeUtils) {
     this.studentRepo = studentRepo;
     this.studentParentRepo = studentParentRepo;
     this.studentSpecification = studentSpecification;
@@ -71,6 +75,7 @@ public class StudentServiceImpl implements StudentService {
     this.cloudinary = cloudinary;
     this.modelMapper = modelMapper;
     this.studentAuthentication = studentAuthentication;
+    this.dateTimeUtils = dateTimeUtils;
   }
 
   @Override
@@ -99,22 +104,16 @@ public class StudentServiceImpl implements StudentService {
             filters.and(
                 (root, query, builder) ->
                     builder.or(
-                        builder.like(root.get(StudentColumns.IDENTITY), "%" + search + "%"),
-                        builder.like(root.get("fullName"), "%" + search + "%")));
+                        builder.like(root.get(StudentEntityFields.STUDENT_ID), "%" + search + "%"),
+                        builder.like(root.get(StudentEntityFields.FULL_NAME), "%" + search + "%")));
       }
       pagedResult = studentRepo.findAll(filters, paging);
-      return new PaginatedList<>(
+      List<StudentList> studentLists =
           pagedResult.getContent().stream()
-              .map(
-                  student ->
-                      new StudentList(
-                          student.getIdentity(),
-                          student.getFullName(),
-                          student.getBirthDate(),
-                          student.getGender(),
-                          student.getMajor().getMajorName(),
-                          student.getMajor().getDepartment().getDepartmentName()))
-              .toList(),
+              .map(student -> modelMapper.map(student, StudentList.class))
+              .toList();
+      return new PaginatedList<>(
+          studentLists,
           pagedResult.getTotalElements(),
           pagedResult.getTotalPages(),
           pagedResult.isLast());
@@ -124,30 +123,30 @@ public class StudentServiceImpl implements StudentService {
   }
 
   @Override
-  public StudentDetail getStudentDetail(String identity) {
+  public StudentDetail getStudentDetail(String studentId) {
     try {
-      Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-      if (!studentAuthentication.isCorrectStudent(
-          identity, getIdentityByUsername(authentication.getName()))) {
-        throw new AccessDeniedException("Access denied");
+      if (AccountUtils.hasRole("STUDENT")) {
+        if (!studentAuthentication.isCorrectStudent(
+            studentId, getStudentIdByUsername(AccountUtils.getCurrentUsername()))) {
+          throw new AccessDeniedException("Access denied");
+        }
       }
-      PersonalInfo personalInformation = studentRepo.findByIdentity(identity);
-      List<ParentInfo> parentInformation = studentParentRepo.findByIdentity(identity);
+      PersonalInfo personalInformation = studentRepo.findByStudentId(studentId);
+      List<ParentInfo> parentInformation = studentParentRepo.findByStudentId(studentId);
       return new StudentDetail(personalInformation, parentInformation);
-    } catch (DataAccessException e) {
+    } catch (RuntimeException e) {
       throw new DatabaseException("An error occurred while fetching student details", e);
     }
   }
 
-  public String getIdentityByUsername(String username) {
+  public String getStudentIdByUsername(String username) {
     try {
       return jdbcTemplate.queryForObject(
-          "SELECT s.identity FROM student s JOIN account a ON s.account_id = a.id WHERE a.username = ?",
+          "SELECT s.student_id FROM student s JOIN account a ON s.account_id = a.id WHERE a.username = ?",
           String.class,
           username);
     } catch (DataAccessException e) {
-      logger.debug("error", e);
-      throw new DatabaseException("An error occurred while fetching student identity", e);
+      throw new DatabaseException("An error occurred while fetching student studentId", e);
     }
   }
 
@@ -157,28 +156,25 @@ public class StudentServiceImpl implements StudentService {
       Student student = modelMapper.map(personalInfoForm, Student.class);
       studentRepo.save(student);
       return new DefaultResponse(new Date(), "Add student personal info successfully", "none");
-    } catch (Exception e) {
+    } catch (DataAccessException e) {
       throw new DatabaseException("An error occurred while adding student personal information", e);
     }
   }
 
   @Override
-  public DefaultResponse deleteStudentPersonalInfo(String identity) {
-    studentRepo.deleteById(identity);
+  public DefaultResponse deleteStudentPersonalInfo(String studentId) {
+    studentRepo.deleteById(studentId);
     return new DefaultResponse(
-        new Date(), "Delete student with ID " + identity + " successfully", "none");
+        new Date(), "Delete student with ID " + studentId + " successfully", "none");
   }
 
   @Override
-  public DefaultResponse deleteManyStudentPersonalInfo(List<IdentityMap> identities) {
+  public DefaultResponse deleteManyStudentPersonalInfo(List<StudentIdMap> studentIds) {
     try {
-      AtomicInteger count = new AtomicInteger();
-      identities.forEach(
-          identityMap -> {
-            studentRepo.deleteById(identityMap.getIdentity());
-            count.getAndIncrement();
-          });
-      return new DefaultResponse(new Date(), "Delete " + count + " student successfully!", "none");
+      List<String> ids = studentIds.stream().map(StudentIdMap::getStudent_id).toList();
+      studentRepo.deleteAllByIdInBatch(ids);
+      return new DefaultResponse(
+          new Date(), "Delete " + ids.size() + " student successfully!", "none");
     } catch (DataAccessException e) {
       throw new DatabaseException(
           "An error occurred while deleting student personal information", e);
@@ -188,28 +184,23 @@ public class StudentServiceImpl implements StudentService {
   @Override
   @Transactional
   public DefaultResponse updateStudentPersonalInfo(
-      String identity, Map<String, Object> updateColumns) {
+      String studentId, Map<String, Object> updateColumns) {
     try {
-      StringBuilder sql = new StringBuilder("UPDATE student SET ");
-      List<Object> params = new ArrayList<>();
-      if (updateColumns.containsKey("birth_date")) {
+      if (updateColumns.containsKey(CommonColumnNames.BIRTH_DATE)) {
         LocalDate localDate =
-            Instant.parse(updateColumns.get("birth_date").toString())
-                .atZone(DateTimeConstants.BANGKOK_ZONE)
-                .toLocalDate();
-        updateColumns.put("birth_date", localDate);
+            dateTimeUtils.changeTimezone(
+                updateColumns.get(CommonColumnNames.BIRTH_DATE).toString(),
+                DateTimeConstants.BANGKOK_ZONE);
+        updateColumns.put(CommonColumnNames.BIRTH_DATE, localDate);
       }
-      updateColumns.forEach(
-          (key, value) -> {
-            sql.append(key).append(" = ?, ");
-            params.add(value);
-          });
-      sql.delete(sql.length() - 2, sql.length() - 1);
-      sql.append("WHERE identity = ?");
-      params.add(identity);
-      jdbcTemplate.update(sql.toString(), params.toArray());
+      String sql =
+          SqlUtils.buildDynamicUpdate(
+              StudentTables.NAME, updateColumns.keySet(), StudentColumns.STUDENT_ID);
+      List<Object> params = new ArrayList<>(updateColumns.values());
+      params.add(studentId);
+      jdbcTemplate.update(sql, params.toArray());
       return new DefaultResponse(
-          new Date(), "Updated student " + identity + " successfully!", "none");
+          new Date(), "Updated student " + studentId + " successfully!", "none");
     } catch (DataAccessException e) {
       throw new DatabaseException(
           "An error occurred while updating student personal information", e);
@@ -218,7 +209,7 @@ public class StudentServiceImpl implements StudentService {
 
   @Override
   @Transactional
-  public DefaultResponse updateStudentAvatar(MultipartFile avatar, String identity)
+  public DefaultResponse updateStudentAvatar(MultipartFile avatar, String studentId)
       throws IOException {
     try {
       Map result =
@@ -231,9 +222,10 @@ public class StudentServiceImpl implements StudentService {
                       "public_id", avatar.getOriginalFilename(),
                       "unique_filename", "true"));
       String avatarURL = (String) result.get("url");
-      jdbcTemplate.update("UPDATE student SET avatar = ? WHERE identity = ?", avatarURL, identity);
+      jdbcTemplate.update(
+          "UPDATE student SET avatar = ? WHERE student_id = ?", avatarURL, studentId);
       return new DefaultResponse(
-          new Date(), "Updated student " + identity + " avatar successfully!", "none");
+          new Date(), "Updated student " + studentId + " avatar successfully!", "none");
     } catch (DataAccessException e) {
       throw new DatabaseException("An error occurred when uploading avatar", e);
     }

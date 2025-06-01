@@ -26,11 +26,11 @@ import lombok.*;
 @Table(name = StudentTables.NAME)
 public class Student {
   @Id
-  @Column(name = StudentColumns.IDENTITY)
-  private String identity;
+  @Column(name = StudentColumns.STUDENT_ID)
+  private String studentId;
 
   @OneToOne
-  @JoinColumn(name = StudentColumns.ACCOUNT_ID, unique = true)
+  @JoinColumn(name = StudentColumns.ACCOUNT_ID, unique = true, referencedColumnName = "id")
   private Account account;
 
   @Column(name = CommonColumnNames.FULL_NAME, nullable = false, unique = true)

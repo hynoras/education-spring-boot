@@ -12,7 +12,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class PersonalInfo {
-  private String identity;
+  private String student_id;
   private String full_name;
   private LocalDate birth_date;
   private GenderEnum gender;

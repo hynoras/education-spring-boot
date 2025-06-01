@@ -29,7 +29,7 @@ class StudentServiceTest {
   void setUp() {
     studentPersonalInformation =
         PersonalInfo.builder()
-            .identity("2052100")
+            .student_id("2052100")
             .full_name("Quang")
             .birth_date(LocalDate.now())
             .gender(GenderEnum.valueOf("Male"))
@@ -42,11 +42,11 @@ class StudentServiceTest {
   }
 
   @Test
-  @DisplayName("Delete student personal information based on identity")
-  void deleteStudentInfo_ifStudentIdentityIsFound() {
-    String identity = "21521000";
-    studentService.deleteStudentPersonalInfo(identity);
-    verify(studentRepo).deleteById(identity);
+  @DisplayName("Delete student personal information based on student id")
+  void deleteStudentInfo_ifStudentIdIsFound() {
+    String studentId = "21521000";
+    studentService.deleteStudentPersonalInfo(studentId);
+    verify(studentRepo).deleteById(studentId);
     System.out.println("Test ran successfully");
   }
 }

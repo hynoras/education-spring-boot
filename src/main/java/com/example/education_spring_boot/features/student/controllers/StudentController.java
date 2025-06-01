@@ -17,10 +17,11 @@ import com.example.education_spring_boot.features.auth.constants.AccountRoutes;
 import com.example.education_spring_boot.features.department.constants.DepartmentTables;
 import com.example.education_spring_boot.features.major.constants.MajorTables;
 import com.example.education_spring_boot.features.student.constants.StudentColumns;
+import com.example.education_spring_boot.features.student.constants.StudentEntityFields;
 import com.example.education_spring_boot.features.student.constants.StudentRoutes;
-import com.example.education_spring_boot.features.student.models.dtos.detail.IdentityMap;
 import com.example.education_spring_boot.features.student.models.dtos.detail.PersonalInfoForm;
 import com.example.education_spring_boot.features.student.models.dtos.detail.StudentDetail;
+import com.example.education_spring_boot.features.student.models.dtos.detail.StudentIdMap;
 import com.example.education_spring_boot.features.student.models.dtos.list.StudentList;
 import com.example.education_spring_boot.features.student.services.StudentServiceImpl;
 import com.example.education_spring_boot.shared.constants.auth.AuthConstants;
@@ -56,7 +57,9 @@ public class StudentController {
               name = PaginationConstants.PAGE_SIZE_PARAM,
               defaultValue = PaginationConstants.DEFAULT_PAGE_SIZE)
           Integer pageSize,
-      @RequestParam(name = SortConstants.SORT_BY_PARAM, defaultValue = StudentColumns.IDENTITY)
+      @RequestParam(
+              name = SortConstants.SORT_BY_PARAM,
+              defaultValue = StudentEntityFields.STUDENT_ID)
           String sortBy,
       @RequestParam(name = SortConstants.SORT_ORDER_PARAM, defaultValue = SortConstants.ORDER_DESC)
           String sortOrder,
@@ -73,14 +76,14 @@ public class StudentController {
   @GetMapping(StudentRoutes.BASE + StudentRoutes.BY_ID)
   @PreAuthorize(AuthConstants.ADMIN_STUDENT_PREAUTHORIZE)
   public ResponseEntity<StudentDetail> getStudentDetail(
-      @PathVariable(StudentColumns.IDENTITY) String identity) {
-    return ResponseEntity.ok(studentService.getStudentDetail(identity));
+      @PathVariable(StudentColumns.STUDENT_ID) String studentId) {
+    return ResponseEntity.ok(studentService.getStudentDetail(studentId));
   }
 
   @GetMapping(StudentRoutes.BASE + StudentRoutes.ID + AccountRoutes.BY_USERNAME)
-  public ResponseEntity<String> getIdentityByUsername(
+  public ResponseEntity<String> getStudentIdByUsername(
       @PathVariable(AccountColumns.USERNAME) String username) {
-    return ResponseEntity.ok(studentService.getIdentityByUsername(username));
+    return ResponseEntity.ok(studentService.getStudentIdByUsername(username));
   }
 
   @PostMapping(StudentRoutes.BASE)
@@ -93,31 +96,31 @@ public class StudentController {
   @DeleteMapping(StudentRoutes.BASE + StudentRoutes.BY_ID)
   @PreAuthorize(AuthConstants.ADMIN_PREAUTHORIZE)
   public ResponseEntity<DefaultResponse> deleteStudentPersonalInfo(
-      @PathVariable(StudentColumns.IDENTITY) String identity) {
-    return ResponseEntity.ok(studentService.deleteStudentPersonalInfo(identity));
+      @PathVariable(StudentColumns.STUDENT_ID) String studentId) {
+    return ResponseEntity.ok(studentService.deleteStudentPersonalInfo(studentId));
   }
 
   @DeleteMapping(StudentRoutes.BASE_PLURAL)
   @PreAuthorize(AuthConstants.ADMIN_PREAUTHORIZE)
   public ResponseEntity<DefaultResponse> deleteManyStudentPersonalInfo(
-      @RequestBody List<IdentityMap> identities) {
+      @RequestBody List<StudentIdMap> identities) {
     return ResponseEntity.ok(studentService.deleteManyStudentPersonalInfo(identities));
   }
 
   @PutMapping(StudentRoutes.BASE + StudentRoutes.BY_ID)
   @PreAuthorize(AuthConstants.ADMIN_PREAUTHORIZE)
   public ResponseEntity<DefaultResponse> updateStudentPersonalInfo(
-      @PathVariable(StudentColumns.IDENTITY) String identity,
+      @PathVariable(StudentColumns.STUDENT_ID) String studentId,
       @RequestBody Map<String, Object> request) {
-    return ResponseEntity.ok(studentService.updateStudentPersonalInfo(identity, request));
+    return ResponseEntity.ok(studentService.updateStudentPersonalInfo(studentId, request));
   }
 
   @PutMapping(StudentRoutes.BASE + StudentRoutes.AVATAR_BY_ID)
   @PreAuthorize(AuthConstants.ADMIN_PREAUTHORIZE)
-  public ResponseEntity<DefaultResponse> updateStudentAVATAR_ATTR(
+  public ResponseEntity<DefaultResponse> updateStudentAvatar(
       @RequestParam(StudentColumns.AVATAR) MultipartFile avatar,
-      @PathVariable(StudentColumns.IDENTITY) String identity)
+      @PathVariable(StudentColumns.STUDENT_ID) String studentId)
       throws IOException {
-    return ResponseEntity.ok(studentService.updateStudentAvatar(avatar, identity));
+    return ResponseEntity.ok(studentService.updateStudentAvatar(avatar, studentId));
   }
 }

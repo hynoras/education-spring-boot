@@ -21,8 +21,8 @@ public interface StudentRepo
 
   @Query(
       "SELECT new com.example.education_spring_boot.features.student.models.dtos.detail.PersonalInfo"
-          + "(s.identity, s.fullName, s.birthDate, s.gender, s.permanentAddress, s.temporaryAddress, s.ethnicGroup, s.religion, s.citizenId, s.avatar) "
+          + "(s.studentId, s.fullName, s.birthDate, s.gender, s.permanentAddress, s.temporaryAddress, s.ethnicGroup, s.religion, s.citizenId, s.avatar) "
           + "FROM Student s "
-          + "WHERE s.identity = :identity")
-  PersonalInfo findByIdentity(@Param(StudentColumns.IDENTITY) String identity);
+          + "WHERE s.studentId = :student_id")
+  PersonalInfo findByStudentId(@Param(StudentColumns.STUDENT_ID) String studentId);
 }
