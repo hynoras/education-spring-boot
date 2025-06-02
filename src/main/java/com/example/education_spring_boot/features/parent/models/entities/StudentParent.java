@@ -28,7 +28,7 @@ public class StudentParent {
   @ManyToOne
   @JoinColumn(
       name = CommonColumnNames.STUDENT_ID,
-      referencedColumnName = StudentColumns.IDENTITY,
+      referencedColumnName = StudentColumns.STUDENT_ID,
       nullable = false)
   private Student studentId;
 

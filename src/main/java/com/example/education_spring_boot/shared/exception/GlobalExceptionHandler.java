@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(JwtExpiredException.class)
   public ResponseEntity<DefaultResponse> handleJwtExpiredException(
-          JwtExpiredException ex, WebRequest request) {
+      JwtExpiredException ex, WebRequest request) {
     return new ResponseEntity<>(
         new DefaultResponse(new Date(), "Token is expired!", request.getDescription(false)),
         HttpStatus.UNAUTHORIZED);

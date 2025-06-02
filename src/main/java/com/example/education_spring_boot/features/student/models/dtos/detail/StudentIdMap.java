@@ -6,6 +6,6 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @Builder
-public class IdentityMap {
-  private String identity;
+public class StudentIdMap {
+  private String student_id;
 }

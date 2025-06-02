@@ -17,6 +17,6 @@ public interface StudentParentRepo extends JpaRepository<StudentParent, Long> {
       "SELECT new com.example.education_spring_boot.features.parent.models.dtos.ParentInfo"
           + "(sp.parentId, sp.fullName, sp.birthDate, sp.nationality, sp.permanentAddress, sp.relationship) "
           + "FROM StudentParent sp "
-          + "WHERE sp.studentId.identity = :identity")
-  List<ParentInfo> findByIdentity(@Param(StudentColumns.IDENTITY) String identity);
+          + "WHERE sp.studentId.studentId = :student_id")
+  List<ParentInfo> findByStudentId(@Param(StudentColumns.STUDENT_ID) String studentId);
 }

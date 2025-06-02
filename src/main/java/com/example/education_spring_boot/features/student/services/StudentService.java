@@ -6,9 +6,9 @@ import java.util.Map;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.education_spring_boot.features.student.models.dtos.detail.IdentityMap;
 import com.example.education_spring_boot.features.student.models.dtos.detail.PersonalInfoForm;
 import com.example.education_spring_boot.features.student.models.dtos.detail.StudentDetail;
+import com.example.education_spring_boot.features.student.models.dtos.detail.StudentIdMap;
 import com.example.education_spring_boot.features.student.models.dtos.list.StudentList;
 import com.example.education_spring_boot.shared.model.DefaultResponse;
 import com.example.education_spring_boot.shared.model.PaginatedList;
@@ -24,19 +24,19 @@ public interface StudentService {
       List<String> department,
       String search);
 
-  public StudentDetail getStudentDetail(String identity);
+  public StudentDetail getStudentDetail(String studentId);
 
-  public String getIdentityByUsername(String username);
+  public String getStudentIdByUsername(String username);
 
   public DefaultResponse addStudentPersonalInfo(PersonalInfoForm personalInfoForm);
 
   public DefaultResponse updateStudentPersonalInfo(
-      String identity, Map<String, Object> updateColumns);
+      String studentId, Map<String, Object> updateColumns);
 
-  public DefaultResponse updateStudentAvatar(MultipartFile avatar, String identity)
+  public DefaultResponse updateStudentAvatar(MultipartFile avatar, String studentId)
       throws IOException;
 
-  public DefaultResponse deleteStudentPersonalInfo(String identity);
+  public DefaultResponse deleteStudentPersonalInfo(String studentId);
 
-  public DefaultResponse deleteManyStudentPersonalInfo(List<IdentityMap> identities);
+  public DefaultResponse deleteManyStudentPersonalInfo(List<StudentIdMap> studentIds);
 }

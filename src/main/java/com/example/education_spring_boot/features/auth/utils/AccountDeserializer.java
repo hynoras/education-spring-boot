@@ -3,6 +3,8 @@ package com.example.education_spring_boot.features.auth.utils;
 import java.io.IOException;
 import java.util.Optional;
 
+import org.springframework.stereotype.Component;
+
 import com.example.education_spring_boot.features.auth.models.entities.Account;
 import com.example.education_spring_boot.features.auth.repositories.AccountRepo;
 import com.example.education_spring_boot.shared.exception.ResourceNotFoundException;
@@ -13,6 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.node.IntNode;
 
+@Component
 public class AccountDeserializer extends StdDeserializer<Account> {
   private final AccountRepo accountRepo;
 
