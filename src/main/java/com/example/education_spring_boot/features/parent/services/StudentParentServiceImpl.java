@@ -40,7 +40,7 @@ public class StudentParentServiceImpl implements StudentParentService {
     try {
       StringBuilder sql = new StringBuilder("INSERT INTO student_parent (");
       List<Object> params = new ArrayList<>();
-      addColumns.remove(ParentColumns.PARENT_ID);
+      addColumns.remove(JsonKeys.ID);
       if (addColumns.containsKey(CommonColumnNames.BIRTH_DATE)) {
         LocalDate localDate =
             dateTimeUtils.changeTimezone(
@@ -50,7 +50,7 @@ public class StudentParentServiceImpl implements StudentParentService {
       }
       addColumns.forEach(
           (key, value) -> {
-            if (!Objects.equals(key, JsonKeys.ID)) {
+            if (!Objects.equals(key, ParentColumns.PARENT_ID)) {
               sql.append(key).append(", ");
               params.add(value);
             }
@@ -108,6 +108,7 @@ public class StudentParentServiceImpl implements StudentParentService {
           });
       return new DefaultResponse(new Date(), "Upsert parent info successfully", "none");
     } catch (RuntimeException e) {
+        logger.error("Full stack trace", e);
       throw new RuntimeException("An error occurred while upserting parent information", e);
     }
   }
