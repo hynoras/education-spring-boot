@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 
+import com.example.education_spring_boot.shared.exception.ResourceNotFoundException;
+import com.example.education_spring_boot.shared.utils.EntityUtils;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,17 +56,18 @@ public class StudentServiceImpl implements StudentService {
   private final Cloudinary cloudinary;
   private final ModelMapper modelMapper;
   private final DateTimeUtils dateTimeUtils;
+  private final EntityUtils entityUtils;
   private static final Logger logger = LoggerFactory.getLogger(StudentServiceImpl.class);
 
   @Autowired
   public StudentServiceImpl(
-      StudentRepo studentRepo,
-      StudentParentRepo studentParentRepo,
-      StudentSpecification studentSpecification,
-      JdbcTemplate jdbcTemplate,
-      Cloudinary cloudinary,
-      ModelMapper modelMapper,
-      DateTimeUtils dateTimeUtils) {
+          StudentRepo studentRepo,
+          StudentParentRepo studentParentRepo,
+          StudentSpecification studentSpecification,
+          JdbcTemplate jdbcTemplate,
+          Cloudinary cloudinary,
+          ModelMapper modelMapper,
+          DateTimeUtils dateTimeUtils, EntityUtils entityUtils) {
     this.studentRepo = studentRepo;
     this.studentParentRepo = studentParentRepo;
     this.studentSpecification = studentSpecification;
@@ -72,6 +75,7 @@ public class StudentServiceImpl implements StudentService {
     this.cloudinary = cloudinary;
     this.modelMapper = modelMapper;
     this.dateTimeUtils = dateTimeUtils;
+      this.entityUtils = entityUtils;
   }
 
   @Override
@@ -121,6 +125,7 @@ public class StudentServiceImpl implements StudentService {
   @Override
   public StudentDetail getStudentDetail(String studentId) {
     try {
+      entityUtils.isEntityExist(studentRepo, studentId, "student");
       if (AccountUtils.hasRole("STUDENT")) {
         if (!Objects.equals(studentId, getStudentIdByUsername(AccountUtils.getCurrentUsername()))) {
           throw new AccessDeniedException("Access denied");
@@ -158,6 +163,7 @@ public class StudentServiceImpl implements StudentService {
 
   @Override
   public DefaultResponse deleteStudentPersonalInfo(String studentId) {
+    entityUtils.isEntityExist(studentRepo, studentId, "student");
     studentRepo.deleteById(studentId);
     return new DefaultResponse(
         new Date(), "Delete student with ID " + studentId + " successfully", "none");
@@ -181,6 +187,7 @@ public class StudentServiceImpl implements StudentService {
   public DefaultResponse updateStudentPersonalInfo(
       String studentId, Map<String, Object> updateColumns) {
     try {
+      entityUtils.isEntityExist(studentRepo, studentId, "student");
       if (updateColumns.containsKey(CommonColumnNames.BIRTH_DATE)) {
         LocalDate localDate =
             dateTimeUtils.changeTimezone(
@@ -207,6 +214,7 @@ public class StudentServiceImpl implements StudentService {
   public DefaultResponse updateStudentAvatar(MultipartFile avatar, String studentId)
       throws IOException {
     try {
+      entityUtils.isEntityExist(studentRepo, studentId, "student");
       Map result =
           cloudinary
               .uploader()

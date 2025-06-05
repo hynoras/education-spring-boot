@@ -3,6 +3,7 @@ package com.example.education_spring_boot.features.student.models.entities;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.example.education_spring_boot.features.major.constants.MajorColumns;
 import org.hibernate.annotations.ColumnDefault;
 
 import com.example.education_spring_boot.features.auth.models.entities.Account;
@@ -66,7 +67,7 @@ public class Student {
   private String avatar;
 
   @ManyToOne
-  @JoinColumn(name = "major_id", referencedColumnName = "majorid")
+  @JoinColumn(name = "major_id", referencedColumnName = MajorColumns.MAJOR_ID)
   private Major major;
 
   @OneToMany(orphanRemoval = true, cascade = CascadeType.PERSIST, mappedBy = "studentId")
